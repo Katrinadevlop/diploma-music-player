@@ -1,0 +1,32 @@
+# Local agent instructions (keep private)
+AGENT.md
+
+# Gradle
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Android
+/captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+
+# Keystores / secrets
+*.jks
+*.keystore
+keystore.properties
+secrets.properties
+
+# OS
+.DS_Store
+Thumbs.db
