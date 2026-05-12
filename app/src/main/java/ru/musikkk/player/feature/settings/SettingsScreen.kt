@@ -131,7 +131,7 @@ fun SettingsScreen(
                     onClick = {
                         val intent = android.content.Intent(
                             android.content.Intent.ACTION_VIEW,
-                            androidx.core.net.Uri.parse("https://musikkk.ru/billing"),
+                            android.net.Uri.parse("https://musikkk.ru/billing"),
                         )
                         runCatching { context.startActivity(intent) }
                     },
