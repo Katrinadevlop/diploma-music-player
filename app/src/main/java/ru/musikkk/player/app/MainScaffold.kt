@@ -12,15 +12,25 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.musikkk.player.feature.player.MiniPlayer
 import ru.musikkk.player.feature.player.PlaybackViewModel
+import ru.musikkk.player.ui.theme.MusikkkTheme
 
 /**
- * Корневой контейнер UI: над навигационным графом приклеен снизу
- * `MiniPlayer`, который виден, как только в плеере появляется активный
- * трек. На полноэкранном маршруте плеера `Routes.Player` мини-плеер
- * прячется — иначе он перекрывает свою же fullscreen-версию.
+ * Корневой контейнер UI: оборачивает граф навигации в актуальную тему,
+ * а снизу клеит `MiniPlayer`. На полноэкранном маршруте плеера он прячется.
+ * Тема и язык применяются глобально из пользовательских настроек — тема
+ * через `MusikkkTheme`, локаль — через `LocaleApplier` в `MainActivity`.
  */
 @Composable
-fun MainScaffold() {
+fun MainScaffold(rootViewModel: RootViewModel = hiltViewModel()) {
+    val themeMode by rootViewModel.themeMode.collectAsStateWithLifecycle()
+
+    MusikkkTheme(themeMode = themeMode) {
+        AppShell()
+    }
+}
+
+@Composable
+private fun AppShell() {
     val playbackViewModel: PlaybackViewModel = hiltViewModel()
     val playbackState by playbackViewModel.state.collectAsStateWithLifecycle()
 

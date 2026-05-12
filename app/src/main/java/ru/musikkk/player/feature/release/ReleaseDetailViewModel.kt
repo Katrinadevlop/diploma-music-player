@@ -9,14 +9,17 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.musikkk.player.core.media.NetworkQualityResolver
 import ru.musikkk.player.core.network.MediaUrls
 import ru.musikkk.player.data.download.DownloadRepository
 import ru.musikkk.player.data.library.LibraryRepository
 import ru.musikkk.player.data.playback.PlaybackController
+import ru.musikkk.player.data.settings.SettingsRepository
 import ru.musikkk.player.domain.download.DownloadInfo
 import ru.musikkk.player.domain.download.DownloadStatus
 import ru.musikkk.player.domain.library.Release
@@ -37,18 +40,13 @@ class ReleaseDetailViewModel @Inject constructor(
     libraryRepository: LibraryRepository,
     private val downloadRepository: DownloadRepository,
     private val playbackController: PlaybackController,
+    private val settingsRepository: SettingsRepository,
+    private val networkQualityResolver: NetworkQualityResolver,
 ) : ViewModel() {
 
     private val releaseId: String =
         Uri.decode(savedStateHandle.get<String>(ARG_RELEASE_ID).orEmpty())
 
-    /**
-     * Состояние экрана собирается из трёх потоков:
-     * 1) метаданные релиза, 2) его треки, 3) состояние скачивания каждого
-     * трека. На каждое изменение списка треков пересоздаём подписку на
-     * скачивания — иначе после refresh библиотеки можем смотреть на
-     * устаревший набор `blob_id`.
-     */
     val state: StateFlow<ReleaseDetailUiState> = libraryRepository.observeReleaseTracks(releaseId)
         .flatMapLatest { tracks ->
             val ids = tracks.map { it.blobId }
@@ -75,15 +73,13 @@ class ReleaseDetailViewModel @Inject constructor(
         val tracks = state.value.tracks
         if (index !in tracks.indices) return
         viewModelScope.launch {
-            val queue = tracks.map { it.toPlayable() }
+            val streamQuality = settingsRepository.settingsFlow.first().streamQuality
+            val variant = networkQualityResolver.preferredVariant(streamQuality)
+            val queue = tracks.map { it.toPlayable(variant) }
             playbackController.playQueue(queue = queue, startIndex = index)
         }
     }
 
-    /**
-     * Действие на иконку скачивания: само определяет, ставить ли в очередь,
-     * отменять или удалять — по текущему статусу.
-     */
     fun onDownloadAction(track: Track) {
         viewModelScope.launch {
             when (state.value.downloads[track.blobId]?.status) {
@@ -95,11 +91,16 @@ class ReleaseDetailViewModel @Inject constructor(
         }
     }
 
-    private suspend fun Track.toPlayable(): PlayableTrack {
-        // Если файл уже на устройстве — играем его, иначе стримим.
+    private suspend fun Track.toPlayable(variant: String?): PlayableTrack {
+        // Если файл уже на устройстве — играем его, иначе стримим. Локальный
+        // файл всегда оригинал (мы скачивали без variant), поэтому
+        // пользовательское качество к нему не применяем.
         val localFile = downloadRepository.localFile(blobId)
-        val url = localFile?.let { Uri.fromFile(it).toString() }
-            ?: MediaUrls.trackStreamUrl(blobId = blobId, variant = null)
+        val url = if (localFile != null) {
+            Uri.fromFile(localFile).toString()
+        } else {
+            MediaUrls.trackStreamUrl(blobId = blobId, variant = variant)
+        }
 
         return PlayableTrack(
             blobId = blobId,

@@ -24,6 +24,7 @@ import ru.musikkk.player.feature.library.LibraryScreen
 import ru.musikkk.player.feature.player.PlayerScreen
 import ru.musikkk.player.feature.release.ReleaseDetailScreen
 import ru.musikkk.player.feature.release.ReleaseDetailViewModel
+import ru.musikkk.player.feature.settings.SettingsScreen
 
 object Routes {
     const val Login = "login"
@@ -31,6 +32,7 @@ object Routes {
     const val VerifyEmail = "verify_email"
     const val Library = "library"
     const val Player = "player"
+    const val Settings = "settings"
 
     private const val RELEASE = "release"
 
@@ -147,7 +149,16 @@ fun AppNavHost(
                     onReleaseClick = { release ->
                         navController.navigate(Routes.release(release.id))
                     },
+                    onOpenSettings = {
+                        navController.navigate(Routes.Settings) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
+            }
+
+            composable(Routes.Settings) {
+                SettingsScreen(onBack = { navController.popBackStack() })
             }
 
             composable(

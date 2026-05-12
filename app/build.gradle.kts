@@ -104,6 +104,11 @@ dependencies {
     // (Theme.Material3.DayNight.NoActionBar). Сам UI в рантайме — Compose.
     implementation(libs.google.material)
 
+    // AppCompat — только ради `AppCompatDelegate.setApplicationLocales(...)`
+    // для смены языка приложения на minSdk 26 (на старых устройствах нужен
+    // AppCompat-помощник; нативный API LocaleManager появился только в API 33).
+    implementation(libs.androidx.appcompat)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)

@@ -35,3 +35,30 @@ internal object MusikkkColors {
     val Success = Accent
     val Warning = Color(0xFFFFC35A)
 }
+
+/**
+ * Светлая палитра — вторичная (веб-клиент изначально dark-only),
+ * нужна для пользователей, которые в настройках выбрали Light. Token'ы
+ * подобраны так, чтобы тот же мятный акцент остался узнаваемым.
+ */
+internal object MusikkkLightColors {
+    val Background = Color(0xFFF7F7F8)
+
+    val Surface = Color(0xFFFFFFFF)
+    val SurfaceHover = Color(0xFFF1F1F2)
+    val SurfaceElevated = Color(0xFFFFFFFF)
+
+    val BorderMuted = Color(0x1A000000)
+    val BorderStrong = Color(0x29000000)
+
+    val TextPrimary = Color(0xDE000000)
+    val TextSecondary = Color(0x99000000)
+    val TextMuted = Color(0x66000000)
+
+    val Accent = Color(0xFF12A472)          // более тёмный, чем dark-акцент — для контраста на светлом
+    val AccentText = Color(0xFF033A26)
+    val AccentBorder = Color(0x8012A472)
+    val AccentBg = Color(0x2412A472)
+
+    val Danger = Color(0xFFC93B3B)
+}

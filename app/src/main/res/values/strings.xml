@@ -73,6 +73,27 @@
     <string name="release_not_found">Release not found</string>
     <string name="release_track_number_placeholder">—</string>
 
+    <!-- Настройки -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_section_playback">Playback</string>
+    <string name="settings_section_library_filters">Library filters</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system">System</string>
+    <string name="settings_language_ru">Русский</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_stream_quality">Stream quality</string>
+    <string name="settings_stream_quality_auto">Auto (Wi-Fi: original, mobile: aac 128)</string>
+    <string name="settings_stream_quality_original">Always original</string>
+    <string name="settings_stream_quality_aac128">Always aac 128 (saves traffic)</string>
+    <string name="settings_section_filter">Release type</string>
+    <string name="settings_section_filter_all">All types</string>
+    <string name="settings_only_downloaded">Show only downloaded</string>
+
     <!-- Скачивание -->
     <string name="download_action_start">Download to phone</string>
     <string name="download_action_cancel">Cancel download</string>

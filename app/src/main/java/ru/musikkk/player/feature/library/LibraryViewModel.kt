@@ -18,15 +18,19 @@ import kotlinx.coroutines.launch
 import okio.IOException
 import retrofit2.HttpException
 import ru.musikkk.player.R
+import ru.musikkk.player.core.database.dao.DownloadDao
 import ru.musikkk.player.data.auth.AuthRepository
 import ru.musikkk.player.data.library.LibraryRepository
+import ru.musikkk.player.data.settings.SettingsRepository
 import ru.musikkk.player.domain.library.Release
+import ru.musikkk.player.domain.settings.LibraryFilters
 
 data class LibraryUiState(
     val releases: List<Release> = emptyList(),
     val isInitialLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     @StringRes val errorRes: Int? = null,
+    val filters: LibraryFilters = LibraryFilters(),
 ) {
     val showEmptyState: Boolean
         get() = !isInitialLoading && errorRes == null && releases.isEmpty()
@@ -40,19 +44,30 @@ sealed class LibraryEvent {
 class LibraryViewModel @Inject constructor(
     private val libraryRepository: LibraryRepository,
     private val authRepository: AuthRepository,
+    private val settingsRepository: SettingsRepository,
+    private val downloadDao: DownloadDao,
 ) : ViewModel() {
 
     private val refreshState = MutableStateFlow(RefreshState())
 
     val state: StateFlow<LibraryUiState> = combine(
         libraryRepository.observeReleases(),
+        downloadDao.observeAll(),
+        settingsRepository.settingsFlow,
         refreshState,
-    ) { releases, refresh ->
+    ) { releases, downloads, settings, refresh ->
+        val downloadedReleaseIds = downloads
+            .filter { it.status == STATUS_COMPLETED }
+            .mapNotNull { it.releaseId }
+            .toSet()
+        val filtered = releases.applyFilters(settings.libraryFilters, downloadedReleaseIds)
+
         LibraryUiState(
-            releases = releases,
+            releases = filtered,
             isInitialLoading = refresh.isInitial,
             isRefreshing = refresh.isRefreshing,
             errorRes = refresh.errorRes,
+            filters = settings.libraryFilters,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -80,11 +95,7 @@ class LibraryViewModel @Inject constructor(
 
     private fun refresh(initial: Boolean) {
         refreshState.update {
-            it.copy(
-                isInitial = initial,
-                isRefreshing = !initial,
-                errorRes = null,
-            )
+            it.copy(isInitial = initial, isRefreshing = !initial, errorRes = null)
         }
 
         viewModelScope.launch {
@@ -113,9 +124,27 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
+    private fun List<Release>.applyFilters(
+        filters: LibraryFilters,
+        downloadedReleaseIds: Set<String>,
+    ): List<Release> {
+        var result = this
+        if (filters.sectionFilter != ru.musikkk.player.domain.settings.SectionFilter.All) {
+            result = result.filter { filters.sectionFilter.matchesRaw(it.section.raw) }
+        }
+        if (filters.showOnlyDownloaded) {
+            result = result.filter { it.id in downloadedReleaseIds }
+        }
+        return result
+    }
+
     private data class RefreshState(
         val isInitial: Boolean = true,
         val isRefreshing: Boolean = false,
         @StringRes val errorRes: Int? = null,
     )
+
+    private companion object {
+        const val STATUS_COMPLETED = "COMPLETED"
+    }
 }
