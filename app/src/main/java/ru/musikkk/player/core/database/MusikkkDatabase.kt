@@ -4,10 +4,12 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import ru.musikkk.player.core.database.dao.DownloadDao
 import ru.musikkk.player.core.database.dao.LibraryDao
+import ru.musikkk.player.core.database.dao.UploadDao
 import ru.musikkk.player.core.database.entity.ArtistEntity
 import ru.musikkk.player.core.database.entity.DownloadEntity
 import ru.musikkk.player.core.database.entity.ReleaseEntity
 import ru.musikkk.player.core.database.entity.TrackEntity
+import ru.musikkk.player.core.database.entity.UploadEntity
 
 @Database(
     entities = [
@@ -15,11 +17,13 @@ import ru.musikkk.player.core.database.entity.TrackEntity
         ReleaseEntity::class,
         TrackEntity::class,
         DownloadEntity::class,
+        UploadEntity::class,
     ],
-    version = 2,
+    version = 3,
     exportSchema = false,
 )
 abstract class MusikkkDatabase : RoomDatabase() {
     abstract fun libraryDao(): LibraryDao
     abstract fun downloadDao(): DownloadDao
+    abstract fun uploadDao(): UploadDao
 }

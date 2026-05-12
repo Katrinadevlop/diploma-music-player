@@ -60,9 +60,12 @@ class PlaybackTracker @Inject constructor(
             .distinctUntilChanged()
             .collect { authed ->
                 if (!authed) return@collect
-                launch { runCatching { likesRepository.refresh() } }
-                launch { runCatching { playlistsRepository.refresh() } }
-                launch { runCatching { continueRepository.refresh() } }
+                // `.collect { }` не CoroutineScope — пускаем загрузку в
+                // фоновых корутинах через класс-скоуп. Все три параллельно,
+                // ошибки глотаем — heavy lift не критичен для playback.
+                scope.launch { runCatching { likesRepository.refresh() } }
+                scope.launch { runCatching { playlistsRepository.refresh() } }
+                scope.launch { runCatching { continueRepository.refresh() } }
             }
     }
 
