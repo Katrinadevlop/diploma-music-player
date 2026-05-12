@@ -16,14 +16,40 @@
     <string name="auth_password_hide">Hide password</string>
     <string name="auth_login_no_account">Don\'t have an account?</string>
     <string name="auth_login_register_link">Sign up</string>
-    <string name="auth_register_register_in_browser">Open registration in browser</string>
-    <string name="auth_register_browser_hint">Registration with email confirmation lives on the web for now.</string>
+    <string name="auth_login_have_account">Already have an account?</string>
+    <string name="auth_field_password_confirm">Repeat password</string>
+    <string name="auth_field_email_required">Email (required for confirmation)</string>
+    <string name="auth_field_accept_terms">I accept the terms and privacy policy</string>
+    <string name="auth_field_accept_marketing">I agree to receive product updates by email (optional)</string>
+    <string name="auth_action_create_account">Create account</string>
+
+    <string name="verify_email_title">Confirm your email</string>
+    <string name="verify_email_body">We sent a confirmation link to %1$s. Open the email and tap the link to activate your account.</string>
+    <string name="verify_email_body_no_password">We sent a confirmation link to %1$s. After tapping the link in your inbox, sign in with your password.</string>
+    <string name="verify_email_action_confirmed">I confirmed my email</string>
+    <string name="verify_email_action_go_to_login">Go to sign in</string>
+    <string name="verify_email_action_resend">Send the email again</string>
+    <string name="verify_email_action_resend_countdown">Resend in %1$ds</string>
+    <string name="verify_email_action_use_other_email">Use a different email</string>
+    <string name="verify_email_resend_sent">Email sent. Check your inbox.</string>
+    <string name="verify_email_not_verified_yet">The email isn\'t confirmed yet. Open the link in your inbox first.</string>
+
     <string name="auth_error_invalid_credentials">Invalid username or password</string>
     <string name="auth_error_email_not_verified">Confirm your email to continue</string>
     <string name="auth_error_rate_limited">Too many attempts, try again later</string>
     <string name="auth_error_network">Network error. Check connection and retry.</string>
     <string name="auth_error_unknown">Something went wrong. Try again.</string>
     <string name="auth_error_empty_fields">Fill in both fields</string>
+
+    <string name="register_error_username_invalid">3–32 characters: latin letters, digits, _ or -</string>
+    <string name="register_error_username_taken">This username is already taken</string>
+    <string name="register_error_password_too_short">Password is too short</string>
+    <string name="register_error_password_invalid">Password doesn\'t meet requirements</string>
+    <string name="register_error_password_mismatch">Passwords don\'t match</string>
+    <string name="register_error_email_invalid">Enter a valid email</string>
+    <string name="register_error_email_taken">This email is already in use</string>
+    <string name="register_error_email_required">Email is required</string>
+    <string name="register_error_terms_required">Accept the terms to continue</string>
 
     <!-- Главный экран -->
     <string name="home_greeting">Hi, %1$s</string>
@@ -46,6 +72,23 @@
     <string name="release_back">Back</string>
     <string name="release_not_found">Release not found</string>
     <string name="release_track_number_placeholder">—</string>
+
+    <!-- Скачивание -->
+    <string name="download_action_start">Download to phone</string>
+    <string name="download_action_cancel">Cancel download</string>
+    <string name="download_action_delete">Delete download</string>
+    <string name="download_action_retry">Retry download</string>
+
+    <!-- Плеер -->
+    <string name="player_play">Play</string>
+    <string name="player_pause">Pause</string>
+    <string name="player_skip_next">Next track</string>
+    <string name="player_skip_previous">Previous track</string>
+    <string name="player_close">Close player</string>
+    <string name="player_now_playing">NOW PLAYING</string>
+    <string name="player_queue">Queue</string>
+    <string name="player_shuffle">Shuffle</string>
+    <string name="player_repeat">Repeat</string>
 
     <!-- Общее -->
     <string name="common_loading">Loading…</string>

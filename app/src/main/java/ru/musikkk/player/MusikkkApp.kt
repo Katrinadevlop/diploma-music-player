@@ -1,8 +1,11 @@
 package ru.musikkk.player
 
 import android.app.Application
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import dagger.Lazy
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -12,11 +15,13 @@ import kotlinx.coroutines.launch
 import ru.musikkk.player.core.datastore.TokenStore
 
 @HiltAndroidApp
-class MusikkkApp : Application(), ImageLoaderFactory {
+class MusikkkApp : Application(), ImageLoaderFactory, Configuration.Provider {
 
     @Inject lateinit var tokenStore: TokenStore
 
-    @Inject lateinit var imageLoaderProvider: dagger.Lazy<ImageLoader>
+    @Inject lateinit var imageLoaderProvider: Lazy<ImageLoader>
+
+    @Inject lateinit var workerFactory: HiltWorkerFactory
 
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -33,4 +38,14 @@ class MusikkkApp : Application(), ImageLoaderFactory {
      * авторизованный OkHttpClient.
      */
     override fun newImageLoader(): ImageLoader = imageLoaderProvider.get()
+
+    /**
+     * WorkManager инициализируется ленивым `androidx.startup` контракт-провайдером,
+     * который читает эту конфигурацию. `HiltWorkerFactory` позволяет нашему
+     * `@HiltWorker`-воркеру получать зависимости через DI.
+     */
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }

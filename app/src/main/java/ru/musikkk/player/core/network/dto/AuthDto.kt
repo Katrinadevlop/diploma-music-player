@@ -48,7 +48,19 @@ data class RegisterResponse(
 )
 
 @Serializable
+data class VerifyResendRequest(
+    val email: String,
+)
+
+@Serializable
+data class VerifyResendResponse(
+    val ok: Boolean = true,
+    @SerialName("retry_after") val retryAfter: Int? = null,
+)
+
+@Serializable
 data class ApiError(
     val error: String,
     val message: String? = null,
+    @SerialName("retry_after") val retryAfter: Int? = null,
 )

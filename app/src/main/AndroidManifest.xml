@@ -32,6 +32,31 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".core.media.MusikkkPlaybackService"
+            android:exported="true"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService" />
+            </intent-filter>
+        </service>
+
+        <!--
+            Отключаем дефолтный авто-инициализатор WorkManager: мы
+            поднимаем его сами через `MusikkkApp : Configuration.Provider`,
+            чтобы `HiltWorkerFactory` могла собирать воркеры через DI.
+        -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
     </application>
 
 </manifest>

@@ -12,19 +12,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.musikkk.player.feature.auth.LoginScreen
+import ru.musikkk.player.feature.auth.RegisterScreen
+import ru.musikkk.player.feature.auth.VerifyEmailScreen
 import ru.musikkk.player.feature.library.LibraryScreen
+import ru.musikkk.player.feature.player.PlayerScreen
 import ru.musikkk.player.feature.release.ReleaseDetailScreen
 import ru.musikkk.player.feature.release.ReleaseDetailViewModel
 
 object Routes {
     const val Login = "login"
+    const val Register = "register"
+    const val VerifyEmail = "verify_email"
     const val Library = "library"
+    const val Player = "player"
 
     private const val RELEASE = "release"
 
@@ -43,10 +49,11 @@ object Routes {
  * Корневой навигационный граф. Стартовый маршрут выбирается из
  * [AppViewModel.startDestination] — пока он `null`, показываем индикатор
  * загрузки, чтобы не было «вспышки» экрана входа у уже залогиненного
- * пользователя.
+ * пользователя или пользователя на середине верификации.
  */
 @Composable
 fun AppNavHost(
+    navController: NavHostController,
     appViewModel: AppViewModel = hiltViewModel(),
 ) {
     val start by appViewModel.startDestination.collectAsStateWithLifecycle()
@@ -61,16 +68,68 @@ fun AppNavHost(
             return@Box
         }
 
-        val controller = rememberNavController()
         NavHost(
-            navController = controller,
+            navController = navController,
             startDestination = start!!,
         ) {
             composable(Routes.Login) {
                 LoginScreen(
                     onAuthenticated = {
-                        controller.navigate(Routes.Library) {
+                        navController.navigate(Routes.Library) {
                             popUpTo(Routes.Login) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onRegisterClick = {
+                        navController.navigate(Routes.Register) {
+                            launchSingleTop = true
+                        }
+                    },
+                )
+            }
+
+            composable(Routes.Register) {
+                RegisterScreen(
+                    onAuthenticated = {
+                        navController.navigate(Routes.Library) {
+                            popUpTo(Routes.Login) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onNeedsEmailVerification = {
+                        navController.navigate(Routes.VerifyEmail) {
+                            popUpTo(Routes.Login) { inclusive = false }
+                            launchSingleTop = true
+                        }
+                    },
+                    onBackToLogin = {
+                        if (!navController.popBackStack(Routes.Login, inclusive = false)) {
+                            navController.navigate(Routes.Login) {
+                                popUpTo(Routes.Register) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    },
+                )
+            }
+
+            composable(Routes.VerifyEmail) {
+                VerifyEmailScreen(
+                    onVerified = {
+                        navController.navigate(Routes.Library) {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onGoToLogin = {
+                        navController.navigate(Routes.Login) {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onUseDifferentEmail = {
+                        navController.navigate(Routes.Register) {
+                            popUpTo(0) { inclusive = true }
                             launchSingleTop = true
                         }
                     },
@@ -80,13 +139,13 @@ fun AppNavHost(
             composable(Routes.Library) {
                 LibraryScreen(
                     onSignedOut = {
-                        controller.navigate(Routes.Login) {
+                        navController.navigate(Routes.Login) {
                             popUpTo(Routes.Library) { inclusive = true }
                             launchSingleTop = true
                         }
                     },
                     onReleaseClick = { release ->
-                        controller.navigate(Routes.release(release.id))
+                        navController.navigate(Routes.release(release.id))
                     },
                 )
             }
@@ -100,7 +159,13 @@ fun AppNavHost(
                 ),
             ) {
                 ReleaseDetailScreen(
-                    onBack = { controller.popBackStack() },
+                    onBack = { navController.popBackStack() },
+                )
+            }
+
+            composable(Routes.Player) {
+                PlayerScreen(
+                    onClose = { navController.popBackStack() },
                 )
             }
         }

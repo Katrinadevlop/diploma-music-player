@@ -6,6 +6,8 @@ import ru.musikkk.player.core.network.dto.RegisterRequest
 import ru.musikkk.player.core.network.dto.RegisterResponse
 import ru.musikkk.player.core.network.dto.TokenRequest
 import ru.musikkk.player.core.network.dto.TokenResponse
+import ru.musikkk.player.core.network.dto.VerifyResendRequest
+import ru.musikkk.player.core.network.dto.VerifyResendResponse
 
 /**
  * Эндпоинты, которые выдают или отзывают сессионный токен. Эти вызовы
@@ -21,4 +23,7 @@ interface AuthApi {
 
     @POST("api/auth/logout")
     suspend fun logout()
+
+    @POST("api/auth/verify/resend")
+    suspend fun verifyResend(@Body body: VerifyResendRequest): VerifyResendResponse
 }

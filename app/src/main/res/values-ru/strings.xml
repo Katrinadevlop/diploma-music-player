@@ -16,14 +16,40 @@
     <string name="auth_password_hide">Скрыть пароль</string>
     <string name="auth_login_no_account">Нет аккаунта?</string>
     <string name="auth_login_register_link">Зарегистрироваться</string>
-    <string name="auth_register_register_in_browser">Открыть регистрацию в браузере</string>
-    <string name="auth_register_browser_hint">Регистрация с подтверждением почты пока живёт на сайте.</string>
+    <string name="auth_login_have_account">Уже есть аккаунт?</string>
+    <string name="auth_field_password_confirm">Пароль ещё раз</string>
+    <string name="auth_field_email_required">Почта (нужна для подтверждения)</string>
+    <string name="auth_field_accept_terms">Согласен с условиями и политикой конфиденциальности</string>
+    <string name="auth_field_accept_marketing">Согласен получать новости продукта по почте (опционально)</string>
+    <string name="auth_action_create_account">Создать аккаунт</string>
+
+    <string name="verify_email_title">Подтвердите почту</string>
+    <string name="verify_email_body">Мы отправили ссылку на %1$s. Откройте письмо и кликните по ссылке, чтобы активировать аккаунт.</string>
+    <string name="verify_email_body_no_password">Мы отправили ссылку на %1$s. После клика по ссылке войдите со своим паролем.</string>
+    <string name="verify_email_action_confirmed">Я подтвердил почту</string>
+    <string name="verify_email_action_go_to_login">Перейти к входу</string>
+    <string name="verify_email_action_resend">Отправить письмо снова</string>
+    <string name="verify_email_action_resend_countdown">Можно отправить через %1$dс</string>
+    <string name="verify_email_action_use_other_email">Использовать другую почту</string>
+    <string name="verify_email_resend_sent">Письмо отправлено. Проверьте почту.</string>
+    <string name="verify_email_not_verified_yet">Почта ещё не подтверждена. Сначала кликните по ссылке из письма.</string>
+
     <string name="auth_error_invalid_credentials">Неверный логин или пароль</string>
     <string name="auth_error_email_not_verified">Подтвердите почту, чтобы продолжить</string>
     <string name="auth_error_rate_limited">Слишком много попыток, попробуйте позже</string>
     <string name="auth_error_network">Ошибка сети. Проверьте соединение и попробуйте снова.</string>
     <string name="auth_error_unknown">Что-то пошло не так. Попробуйте ещё раз.</string>
     <string name="auth_error_empty_fields">Заполните оба поля</string>
+
+    <string name="register_error_username_invalid">3–32 символа: латиница, цифры, _ или -</string>
+    <string name="register_error_username_taken">Это имя пользователя уже занято</string>
+    <string name="register_error_password_too_short">Пароль слишком короткий</string>
+    <string name="register_error_password_invalid">Пароль не отвечает требованиям</string>
+    <string name="register_error_password_mismatch">Пароли не совпадают</string>
+    <string name="register_error_email_invalid">Введите корректную почту</string>
+    <string name="register_error_email_taken">Эта почта уже занята</string>
+    <string name="register_error_email_required">Почта обязательна</string>
+    <string name="register_error_terms_required">Примите условия, чтобы продолжить</string>
 
     <!-- Главный экран -->
     <string name="home_greeting">Привет, %1$s</string>
@@ -46,6 +72,23 @@
     <string name="release_back">Назад</string>
     <string name="release_not_found">Релиз не найден</string>
     <string name="release_track_number_placeholder">—</string>
+
+    <!-- Скачивание -->
+    <string name="download_action_start">Скачать на телефон</string>
+    <string name="download_action_cancel">Отменить скачивание</string>
+    <string name="download_action_delete">Удалить скачанный файл</string>
+    <string name="download_action_retry">Повторить скачивание</string>
+
+    <!-- Плеер -->
+    <string name="player_play">Играть</string>
+    <string name="player_pause">Пауза</string>
+    <string name="player_skip_next">Следующий трек</string>
+    <string name="player_skip_previous">Предыдущий трек</string>
+    <string name="player_close">Свернуть плеер</string>
+    <string name="player_now_playing">СЕЙЧАС ИГРАЕТ</string>
+    <string name="player_queue">Очередь</string>
+    <string name="player_shuffle">Перемешать</string>
+    <string name="player_repeat">Повтор</string>
 
     <!-- Общее -->
     <string name="common_loading">Загрузка…</string>

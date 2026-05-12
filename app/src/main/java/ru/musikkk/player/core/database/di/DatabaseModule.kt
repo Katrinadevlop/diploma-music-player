@@ -28,4 +28,8 @@ object DatabaseModule {
 
     @Provides
     fun provideLibraryDao(database: MusikkkDatabase): LibraryDao = database.libraryDao()
+
+    @Provides
+    fun provideDownloadDao(database: MusikkkDatabase): ru.musikkk.player.core.database.dao.DownloadDao =
+        database.downloadDao()
 }

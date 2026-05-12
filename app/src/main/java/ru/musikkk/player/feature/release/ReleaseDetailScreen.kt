@@ -1,5 +1,6 @@
 package ru.musikkk.player.feature.release
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,9 +14,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DownloadForOffline
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -36,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.musikkk.player.R
+import ru.musikkk.player.domain.download.DownloadInfo
+import ru.musikkk.player.domain.download.DownloadStatus
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.domain.library.Track
 import ru.musikkk.player.ui.components.CoverImage
@@ -90,14 +96,26 @@ fun ReleaseDetailScreen(
                         .align(Alignment.Center)
                         .padding(MusikkkSpacing.s5),
                 )
-                else -> Content(release = state.release!!, tracks = state.tracks)
+                else -> Content(
+                    release = state.release!!,
+                    tracks = state.tracks,
+                    downloads = state.downloads,
+                    onTrackClick = viewModel::playFromIndex,
+                    onDownloadAction = viewModel::onDownloadAction,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun Content(release: Release, tracks: List<Track>) {
+private fun Content(
+    release: Release,
+    tracks: List<Track>,
+    downloads: Map<String, DownloadInfo>,
+    onTrackClick: (index: Int) -> Unit,
+    onDownloadAction: (Track) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -105,8 +123,13 @@ private fun Content(release: Release, tracks: List<Track>) {
         item(key = "header") {
             Header(release = release, trackCount = tracks.size)
         }
-        items(tracks, key = { it.blobId }) { track ->
-            TrackRow(track = track)
+        itemsIndexed(tracks, key = { _, t -> t.blobId }) { index, track ->
+            TrackRow(
+                track = track,
+                download = downloads[track.blobId],
+                onClick = { onTrackClick(index) },
+                onDownloadAction = { onDownloadAction(track) },
+            )
             HorizontalDivider(
                 modifier = Modifier.padding(start = 88.dp),
                 color = MaterialTheme.colorScheme.outlineVariant,
@@ -162,10 +185,16 @@ private fun Header(release: Release, trackCount: Int) {
 }
 
 @Composable
-private fun TrackRow(track: Track) {
+private fun TrackRow(
+    track: Track,
+    download: DownloadInfo?,
+    onClick: () -> Unit,
+    onDownloadAction: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(horizontal = MusikkkSpacing.s5, vertical = MusikkkSpacing.s3),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -198,12 +227,53 @@ private fun TrackRow(track: Track) {
                 )
             }
         }
-        Spacer(Modifier.size(MusikkkSpacing.s3))
+        Spacer(Modifier.size(MusikkkSpacing.s2))
+
+        DownloadIconButton(download = download, onClick = onDownloadAction)
+
+        Spacer(Modifier.size(MusikkkSpacing.s2))
         Text(
             text = formatDuration(track.duration),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun DownloadIconButton(
+    download: DownloadInfo?,
+    onClick: () -> Unit,
+) {
+    IconButton(onClick = onClick, modifier = Modifier.size(36.dp)) {
+        when (download?.status) {
+            null -> Icon(
+                imageVector = Icons.Filled.DownloadForOffline,
+                contentDescription = stringResource(id = R.string.download_action_start),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            DownloadStatus.Queued -> CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            DownloadStatus.Running -> CircularProgressIndicator(
+                progress = { download.progress },
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            DownloadStatus.Completed -> Icon(
+                imageVector = Icons.Filled.Check,
+                contentDescription = stringResource(id = R.string.download_action_delete),
+                tint = MaterialTheme.colorScheme.primary,
+            )
+            DownloadStatus.Failed -> Icon(
+                imageVector = Icons.Filled.ErrorOutline,
+                contentDescription = stringResource(id = R.string.download_action_retry),
+                tint = MaterialTheme.colorScheme.error,
+            )
+        }
     }
 }
 

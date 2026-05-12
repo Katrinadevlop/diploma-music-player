@@ -1,0 +1,252 @@
+package ru.musikkk.player.feature.auth
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.flow.collectLatest
+import ru.musikkk.player.R
+import ru.musikkk.player.ui.components.PasswordField
+import ru.musikkk.player.ui.theme.MusikkkSpacing
+
+@Composable
+fun RegisterScreen(
+    onAuthenticated: () -> Unit,
+    onNeedsEmailVerification: (email: String) -> Unit,
+    onBackToLogin: () -> Unit,
+    viewModel: RegisterViewModel = hiltViewModel(),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val events = viewModel.events
+
+    LaunchedEffect(events) {
+        events.collectLatest { event ->
+            when (event) {
+                RegisterEvent.Registered -> onAuthenticated()
+                is RegisterEvent.NeedsEmailVerification -> onNeedsEmailVerification(event.email)
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .imePadding()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = MusikkkSpacing.s5, vertical = MusikkkSpacing.s6),
+    ) {
+        Text(
+            text = stringResource(id = R.string.auth_register_title),
+            style = MaterialTheme.typography.displayLarge,
+        )
+        Spacer(Modifier.height(MusikkkSpacing.s6))
+
+        OutlinedTextField(
+            value = state.username,
+            onValueChange = viewModel::onUsernameChange,
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            enabled = !state.isSubmitting,
+            isError = state.usernameError != null,
+            label = { Text(stringResource(id = R.string.auth_field_username)) },
+            supportingText = {
+                Text(
+                    stringResource(
+                        id = state.usernameError ?: R.string.auth_field_username_hint,
+                    ),
+                )
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Ascii,
+                imeAction = ImeAction.Next,
+                capitalization = KeyboardCapitalization.None,
+                autoCorrectEnabled = false,
+            ),
+        )
+
+        Spacer(Modifier.height(MusikkkSpacing.s3))
+
+        OutlinedTextField(
+            value = state.email,
+            onValueChange = viewModel::onEmailChange,
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            enabled = !state.isSubmitting,
+            isError = state.emailError != null,
+            label = { Text(stringResource(id = R.string.auth_field_email_required)) },
+            supportingText = state.emailError?.let { resId ->
+                { Text(stringResource(id = resId)) }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next,
+                capitalization = KeyboardCapitalization.None,
+                autoCorrectEnabled = false,
+            ),
+        )
+
+        Spacer(Modifier.height(MusikkkSpacing.s3))
+
+        PasswordField(
+            value = state.password,
+            onValueChange = viewModel::onPasswordChange,
+            isVisible = state.isPasswordVisible,
+            onToggleVisibility = viewModel::onTogglePasswordVisibility,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isSubmitting,
+            isError = state.passwordError != null,
+            imeAction = ImeAction.Next,
+        )
+        if (state.passwordError != null) {
+            Text(
+                text = stringResource(id = state.passwordError!!),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(start = MusikkkSpacing.s4, top = MusikkkSpacing.s1),
+            )
+        }
+
+        Spacer(Modifier.height(MusikkkSpacing.s3))
+
+        OutlinedTextField(
+            value = state.passwordConfirm,
+            onValueChange = viewModel::onPasswordConfirmChange,
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            enabled = !state.isSubmitting,
+            isError = state.passwordConfirmError != null,
+            label = { Text(stringResource(id = R.string.auth_field_password_confirm)) },
+            supportingText = state.passwordConfirmError?.let { resId ->
+                { Text(stringResource(id = resId)) }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done,
+            ),
+            visualTransformation = if (state.isPasswordVisible) {
+                androidx.compose.ui.text.input.VisualTransformation.None
+            } else {
+                androidx.compose.ui.text.input.PasswordVisualTransformation()
+            },
+        )
+
+        Spacer(Modifier.height(MusikkkSpacing.s4))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Checkbox(
+                checked = state.acceptTerms,
+                onCheckedChange = viewModel::onAcceptTermsChange,
+                enabled = !state.isSubmitting,
+            )
+            Text(
+                text = stringResource(id = R.string.auth_field_accept_terms),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = MusikkkSpacing.s2),
+            )
+        }
+        if (state.termsError != null) {
+            Text(
+                text = stringResource(id = state.termsError!!),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(start = MusikkkSpacing.s4 * 2 + 8.dp),
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Checkbox(
+                checked = state.acceptEmailMarketing,
+                onCheckedChange = viewModel::onAcceptEmailMarketingChange,
+                enabled = !state.isSubmitting,
+            )
+            Text(
+                text = stringResource(id = R.string.auth_field_accept_marketing),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = MusikkkSpacing.s2),
+            )
+        }
+
+        if (state.formError != null) {
+            Spacer(Modifier.height(MusikkkSpacing.s3))
+            Text(
+                text = stringResource(id = state.formError!!),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
+        Spacer(Modifier.height(MusikkkSpacing.s5))
+
+        Button(
+            onClick = viewModel::submit,
+            enabled = state.canSubmit,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+        ) {
+            if (state.isSubmitting) {
+                CircularProgressIndicator(
+                    modifier = Modifier.height(20.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            } else {
+                Text(stringResource(id = R.string.auth_action_create_account))
+            }
+        }
+
+        Spacer(Modifier.height(MusikkkSpacing.s4))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = stringResource(id = R.string.auth_login_have_account),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            TextButton(onClick = onBackToLogin, enabled = !state.isSubmitting) {
+                Text(stringResource(id = R.string.auth_action_login))
+            }
+        }
+    }
+}

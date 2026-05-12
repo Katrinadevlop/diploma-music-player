@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,8 +12,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-
-private val Context.tokenDataStore by preferencesDataStore(name = "musikkk_auth")
 
 /**
  * Хранилище Bearer-токена, выданного `POST /api/auth/token`.
@@ -41,7 +38,7 @@ class TokenStore @Inject constructor(
     @Volatile
     private var memoryCache: String? = null
 
-    val tokenFlow: Flow<String?> = context.tokenDataStore.data
+    val tokenFlow: Flow<String?> = context.authDataStore.data
         .map { prefs -> prefs[Keys.Token]?.takeIf { it.isNotBlank() } }
         .onEach { memoryCache = it }
         .distinctUntilChanged()
@@ -56,7 +53,7 @@ class TokenStore @Inject constructor(
 
     suspend fun save(token: String, expiresAtMs: Long) {
         memoryCache = token
-        context.tokenDataStore.edit { prefs ->
+        context.authDataStore.edit { prefs ->
             prefs[Keys.Token] = token
             prefs[Keys.ExpiresAtMs] = expiresAtMs
         }
@@ -64,7 +61,7 @@ class TokenStore @Inject constructor(
 
     suspend fun clear() {
         memoryCache = null
-        context.tokenDataStore.edit { prefs ->
+        context.authDataStore.edit { prefs ->
             prefs.remove(Keys.Token)
             prefs.remove(Keys.ExpiresAtMs)
         }

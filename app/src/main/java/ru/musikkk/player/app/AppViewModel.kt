@@ -6,28 +6,41 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import ru.musikkk.player.data.auth.AuthRepository
 
 /**
  * Корневая ViewModel — отвечает за выбор стартового маршрута навигации.
  *
- * Один раз читает токен из DataStore через [AuthRepository.tokenFlow] и
- * решает, нужен ли пользователю экран входа или сразу домашний. После
- * первого решения маршрутом управляет уже сама навигация (Login.onSuccess
- * → Library, Library.onLogout → Login).
+ * Решение принимается из двух источников: есть ли сессионный токен и
+ * есть ли «висящая» регистрация без подтверждения почты. Приоритет:
+ *
+ * 1. токен есть → `Library`
+ * 2. иначе если есть pending verification → `VerifyEmail` (даже после
+ *    рестарта приложения пользователь возвращается в этот флоу)
+ * 3. иначе → `Login`
+ *
+ * Пока решение не вычислено, отдаём `null` — `AppNavHost` показывает
+ * индикатор загрузки.
  */
 @HiltViewModel
 class AppViewModel @Inject constructor(
     authRepository: AuthRepository,
 ) : ViewModel() {
 
-    val startDestination: StateFlow<String?> = authRepository.tokenFlow
-        .map { token -> if (token != null) Routes.Library else Routes.Login }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = null,
-        )
+    val startDestination: StateFlow<String?> = combine(
+        authRepository.tokenFlow,
+        authRepository.pendingVerificationFlow,
+    ) { token, pending ->
+        when {
+            token != null -> Routes.Library
+            pending != null -> Routes.VerifyEmail
+            else -> Routes.Login
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = null,
+    )
 }
