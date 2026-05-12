@@ -1,6 +1,7 @@
 package ru.musikkk.player.feature.auth
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import ru.musikkk.player.R
+import ru.musikkk.player.ui.components.MusikkkBackdrop
 import ru.musikkk.player.ui.components.PasswordField
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
@@ -58,6 +60,8 @@ fun RegisterScreen(
         }
     }
 
+    Box(modifier = Modifier.fillMaxSize()) {
+    MusikkkBackdrop(coverId = null)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,6 +70,8 @@ fun RegisterScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = MusikkkSpacing.s5, vertical = MusikkkSpacing.s6),
     ) {
+        BrandHeader()
+        Spacer(Modifier.height(MusikkkSpacing.s5))
         Text(
             text = stringResource(id = R.string.auth_register_title),
             style = MaterialTheme.typography.displayLarge,
@@ -249,4 +255,5 @@ fun RegisterScreen(
             }
         }
     }
+    } // closes outer Box around backdrop
 }

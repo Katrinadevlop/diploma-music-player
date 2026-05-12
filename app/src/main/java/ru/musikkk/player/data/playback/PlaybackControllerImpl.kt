@@ -53,14 +53,15 @@ class PlaybackControllerImpl @Inject constructor(
 
     private var positionJob: Job? = null
 
-    override fun playQueue(queue: List<PlayableTrack>, startIndex: Int) {
+    override fun playQueue(queue: List<PlayableTrack>, startIndex: Int, startPositionMs: Long) {
         if (queue.isEmpty()) return
         val safeIndex = startIndex.coerceIn(0, queue.lastIndex)
+        val safePosition = startPositionMs.coerceAtLeast(0L)
 
         mainScope.launch {
             val ctrl = awaitController()
             val items = queue.map { it.toMediaItem() }
-            ctrl.setMediaItems(items, safeIndex, /* startPositionMs = */ 0L)
+            ctrl.setMediaItems(items, safeIndex, safePosition)
             ctrl.prepare()
             ctrl.play()
             // Сразу обновим очередь в state — listener придёт чуть позже.

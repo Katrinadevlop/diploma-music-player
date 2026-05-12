@@ -10,12 +10,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.musikkk.player.data.auth.AuthRepository
 import ru.musikkk.player.data.playback.PlaybackController
 
 /**
  * Сводит воспроизведение и пользовательские данные:
  * - при смене текущего трека пишет в Recent и бампит Playcount,
- * - раз в [CONTINUE_SAVE_INTERVAL_MS] сохраняет позицию в Continue.
+ * - раз в [CONTINUE_SAVE_INTERVAL_MS] сохраняет позицию в Continue,
+ * - на появление токена (логин/рестарт с активной сессией) подтягивает
+ *   серверный кэш Likes/Playlists/Continue, чтобы UI на других экранах
+ *   сразу видел актуальные данные.
  *
  * Стартует один раз при первом обращении (через `start()` из
  * `MusikkkApp.onCreate`). Всё через `runCatching`, чтобы офлайн не
@@ -29,6 +33,7 @@ class PlaybackTracker @Inject constructor(
     private val continueRepository: ContinueRepository,
     private val likesRepository: LikesRepository,
     private val playlistsRepository: PlaylistsRepository,
+    private val authRepository: AuthRepository,
     private val trackPathResolver: BlobToPathResolver,
 ) {
 
@@ -38,14 +43,27 @@ class PlaybackTracker @Inject constructor(
     fun start() {
         if (trackingJob?.isActive == true) return
         trackingJob = scope.launch {
-            // Прогреваем серверный кэш — likes/playlists/continue нужны
-            // на других экранах сразу, без задержки на первый refresh().
-            launch { runCatching { likesRepository.refresh() } }
-            launch { runCatching { playlistsRepository.refresh() } }
-            launch { runCatching { continueRepository.refresh() } }
+            launch { hydrateOnLogin() }
             launch { observeTrackChanges() }
             launch { saveContinuePeriodically() }
         }
+    }
+
+    /**
+     * Слушает токен — при появлении не-null значения (свежий логин или
+     * рестарт приложения с сохранённой сессией) подтягивает серверный
+     * кэш пользовательских данных.
+     */
+    private suspend fun hydrateOnLogin() {
+        authRepository.tokenFlow
+            .map { it != null }
+            .distinctUntilChanged()
+            .collect { authed ->
+                if (!authed) return@collect
+                launch { runCatching { likesRepository.refresh() } }
+                launch { runCatching { playlistsRepository.refresh() } }
+                launch { runCatching { continueRepository.refresh() } }
+            }
     }
 
     private suspend fun observeTrackChanges() {

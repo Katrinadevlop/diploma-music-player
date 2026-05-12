@@ -121,6 +121,9 @@
     <string name="settings_section_filter">Release type</string>
     <string name="settings_section_filter_all">All types</string>
     <string name="settings_only_downloaded">Show only downloaded</string>
+    <string name="settings_section_account">Account</string>
+    <string name="settings_manage_subscription">Subscription &amp; plans</string>
+    <string name="settings_open_in_browser">Opens in browser</string>
 
     <!-- Хаб «Your music» -->
     <string name="hub_title">Your music</string>

@@ -51,6 +51,7 @@ import ru.musikkk.player.R
 import ru.musikkk.player.domain.playback.PlaybackState
 import ru.musikkk.player.domain.playback.RepeatMode
 import ru.musikkk.player.ui.components.CoverImage
+import ru.musikkk.player.ui.components.MusikkkBackdrop
 import ru.musikkk.player.ui.format.formatDuration
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
@@ -64,6 +65,9 @@ fun PlayerScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     var queueVisible by remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        MusikkkBackdrop(coverId = state.currentTrack?.coverId)
 
     Column(
         modifier = Modifier
@@ -138,6 +142,7 @@ fun PlayerScreen(
             },
         )
     }
+    } // closes outer Box around backdrop
 }
 
 @Composable

@@ -131,7 +131,11 @@ class LibraryViewModel @Inject constructor(
     fun resumeContinue() {
         val card = state.value.continueCard ?: return
         viewModelScope.launch {
-            playPaths(paths = listOf(card.track.filePath), startIndex = 0)
+            playPaths(
+                paths = listOf(card.track.filePath),
+                startIndex = 0,
+                startPositionMs = (card.positionSeconds * 1000.0).toLong(),
+            )
         }
     }
 

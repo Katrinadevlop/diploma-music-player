@@ -52,6 +52,7 @@ import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.domain.library.Track
 import ru.musikkk.player.feature.userdata.AddToPlaylistSheet
 import ru.musikkk.player.ui.components.CoverImage
+import ru.musikkk.player.ui.components.MusikkkBackdrop
 import ru.musikkk.player.ui.format.formatDuration
 import ru.musikkk.player.ui.format.formatReleaseYear
 import ru.musikkk.player.ui.theme.MusikkkRadius
@@ -65,6 +66,10 @@ fun ReleaseDetailScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var addToPlaylistTarget by remember { mutableStateOf<Track?>(null) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Размытая обложка релиза за всем UI — как на вебе.
+        MusikkkBackdrop(coverId = state.release?.coverId)
 
     Scaffold(
         topBar = {
@@ -85,11 +90,11 @@ fun ReleaseDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
                 ),
             )
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = androidx.compose.ui.graphics.Color.Transparent,
     ) { padding ->
         Box(
             modifier = Modifier
@@ -125,6 +130,7 @@ fun ReleaseDetailScreen(
             onDismiss = { addToPlaylistTarget = null },
         )
     }
+    } // closes outer Box around Scaffold
 }
 
 @Composable

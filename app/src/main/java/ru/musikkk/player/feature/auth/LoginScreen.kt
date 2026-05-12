@@ -1,6 +1,7 @@
 package ru.musikkk.player.feature.auth
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,7 +37,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import ru.musikkk.player.R
+import ru.musikkk.player.ui.components.GlassSurface
+import ru.musikkk.player.ui.components.MusikkkBackdrop
 import ru.musikkk.player.ui.components.PasswordField
+import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
 @Composable
@@ -55,102 +60,133 @@ fun LoginScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-            .imePadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = MusikkkSpacing.s5, vertical = MusikkkSpacing.s6),
-        verticalArrangement = Arrangement.Center,
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        MusikkkBackdrop(coverId = null)
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = MusikkkSpacing.s4, vertical = MusikkkSpacing.s6),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            BrandHeader()
+
+            Spacer(Modifier.height(MusikkkSpacing.s6))
+
+            GlassSurface(
+                modifier = Modifier.fillMaxWidth(),
+                radius = MusikkkRadius.xl,
+            ) {
+                Column(modifier = Modifier.padding(MusikkkSpacing.s5)) {
+                    Text(
+                        text = stringResource(id = R.string.auth_login_title),
+                        style = MaterialTheme.typography.headlineLarge,
+                    )
+                    Spacer(Modifier.height(MusikkkSpacing.s1))
+                    Text(
+                        text = stringResource(id = R.string.auth_login_subtitle),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+
+                    Spacer(Modifier.height(MusikkkSpacing.s5))
+
+                    OutlinedTextField(
+                        value = state.username,
+                        onValueChange = viewModel::onUsernameChange,
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        enabled = !state.isSubmitting,
+                        isError = state.errorRes != null,
+                        label = { Text(stringResource(id = R.string.auth_field_username)) },
+                        supportingText = { Text(stringResource(id = R.string.auth_field_username_hint)) },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Ascii,
+                            imeAction = ImeAction.Next,
+                            capitalization = KeyboardCapitalization.None,
+                            autoCorrectEnabled = false,
+                        ),
+                    )
+
+                    Spacer(Modifier.height(MusikkkSpacing.s3))
+
+                    PasswordField(
+                        value = state.password,
+                        onValueChange = viewModel::onPasswordChange,
+                        isVisible = state.isPasswordVisible,
+                        onToggleVisibility = viewModel::onTogglePasswordVisibility,
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isSubmitting,
+                        isError = state.errorRes != null,
+                        imeAction = ImeAction.Done,
+                    )
+
+                    if (state.errorRes != null) {
+                        Spacer(Modifier.height(MusikkkSpacing.s3))
+                        Text(
+                            text = stringResource(id = state.errorRes!!),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    }
+
+                    Spacer(Modifier.height(MusikkkSpacing.s5))
+
+                    Button(
+                        onClick = viewModel::submit,
+                        enabled = state.canSubmit,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                    ) {
+                        if (state.isSubmitting) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.height(20.dp),
+                                strokeWidth = 2.dp,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                            )
+                        } else {
+                            Text(stringResource(id = R.string.auth_action_login))
+                        }
+                    }
+
+                    Spacer(Modifier.height(MusikkkSpacing.s2))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.auth_login_no_account),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        TextButton(onClick = onRegisterClick, enabled = !state.isSubmitting) {
+                            Text(stringResource(id = R.string.auth_login_register_link))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun BrandHeader() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = stringResource(id = R.string.auth_login_title),
-            style = MaterialTheme.typography.displayLarge,
+            text = "Musikkk",
+            style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.primary,
         )
-        Spacer(Modifier.height(MusikkkSpacing.s2))
         Text(
-            text = stringResource(id = R.string.auth_login_subtitle),
-            style = MaterialTheme.typography.bodyLarge,
+            text = "musikkk.ru",
+            style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-
-        Spacer(Modifier.height(MusikkkSpacing.s6))
-
-        OutlinedTextField(
-            value = state.username,
-            onValueChange = viewModel::onUsernameChange,
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            enabled = !state.isSubmitting,
-            isError = state.errorRes != null,
-            label = { Text(stringResource(id = R.string.auth_field_username)) },
-            supportingText = { Text(stringResource(id = R.string.auth_field_username_hint)) },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Ascii,
-                imeAction = ImeAction.Next,
-                capitalization = KeyboardCapitalization.None,
-                autoCorrectEnabled = false,
-            ),
-        )
-
-        Spacer(Modifier.height(MusikkkSpacing.s3))
-
-        PasswordField(
-            value = state.password,
-            onValueChange = viewModel::onPasswordChange,
-            isVisible = state.isPasswordVisible,
-            onToggleVisibility = viewModel::onTogglePasswordVisibility,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !state.isSubmitting,
-            isError = state.errorRes != null,
-            imeAction = ImeAction.Done,
-        )
-
-        if (state.errorRes != null) {
-            Spacer(Modifier.height(MusikkkSpacing.s3))
-            Text(
-                text = stringResource(id = state.errorRes!!),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error,
-            )
-        }
-
-        Spacer(Modifier.height(MusikkkSpacing.s5))
-
-        Button(
-            onClick = viewModel::submit,
-            enabled = state.canSubmit,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp),
-        ) {
-            if (state.isSubmitting) {
-                CircularProgressIndicator(
-                    modifier = Modifier.height(20.dp),
-                    strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
-            } else {
-                Text(stringResource(id = R.string.auth_action_login))
-            }
-        }
-
-        Spacer(Modifier.height(MusikkkSpacing.s4))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = stringResource(id = R.string.auth_login_no_account),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            TextButton(onClick = onRegisterClick, enabled = !state.isSubmitting) {
-                Text(stringResource(id = R.string.auth_login_register_link))
-            }
-        }
     }
 }

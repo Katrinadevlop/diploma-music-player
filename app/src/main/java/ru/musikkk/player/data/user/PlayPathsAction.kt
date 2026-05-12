@@ -29,7 +29,11 @@ class PlayPathsAction @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val networkQualityResolver: NetworkQualityResolver,
 ) {
-    suspend operator fun invoke(paths: List<String>, startIndex: Int = 0) {
+    suspend operator fun invoke(
+        paths: List<String>,
+        startIndex: Int = 0,
+        startPositionMs: Long = 0L,
+    ) {
         if (paths.isEmpty()) return
         val tracks = libraryRepository.tracksByPaths(paths)
         if (tracks.isEmpty()) return
@@ -39,7 +43,11 @@ class PlayPathsAction @Inject constructor(
 
         val queue = tracks.map { it.toPlayable(variant) }
         val safeStart = startIndex.coerceIn(0, queue.lastIndex)
-        playbackController.playQueue(queue = queue, startIndex = safeStart)
+        playbackController.playQueue(
+            queue = queue,
+            startIndex = safeStart,
+            startPositionMs = startPositionMs,
+        )
     }
 
     private suspend fun Track.toPlayable(variant: String?): PlayableTrack {

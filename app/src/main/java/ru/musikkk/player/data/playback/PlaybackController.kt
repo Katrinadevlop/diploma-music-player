@@ -11,10 +11,10 @@ interface PlaybackController {
 
     /**
      * Поставить очередь и начать воспроизведение с указанного индекса.
-     * Если очередь та же и индекс совпадает с текущим — просто
-     * возобновляет воспроизведение (toggle на паузу не делает).
+     * `startPositionMs` — позиция внутри стартового трека (для возврата
+     * к Continue). По умолчанию 0.
      */
-    fun playQueue(queue: List<PlayableTrack>, startIndex: Int)
+    fun playQueue(queue: List<PlayableTrack>, startIndex: Int, startPositionMs: Long = 0L)
 
     fun togglePlayPause()
     fun seekToMs(positionMs: Long)

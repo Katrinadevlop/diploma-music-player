@@ -121,6 +121,9 @@
     <string name="settings_section_filter">Тип релиза</string>
     <string name="settings_section_filter_all">Все типы</string>
     <string name="settings_only_downloaded">Показывать только скачанные</string>
+    <string name="settings_section_account">Аккаунт</string>
+    <string name="settings_manage_subscription">Подписка и тарифы</string>
+    <string name="settings_open_in_browser">Откроется в браузере</string>
 
     <!-- Хаб «Моя музыка» -->
     <string name="hub_title">Моя музыка</string>

@@ -120,6 +120,23 @@ fun SettingsScreen(
                     onCheckedChange = viewModel::setOnlyDownloaded,
                 )
             }
+
+            item { Divider() }
+            item { SectionHeader(stringResource(id = R.string.settings_section_account)) }
+            item {
+                val context = androidx.compose.ui.platform.LocalContext.current
+                SettingRow(
+                    title = stringResource(id = R.string.settings_manage_subscription),
+                    value = stringResource(id = R.string.settings_open_in_browser),
+                    onClick = {
+                        val intent = android.content.Intent(
+                            android.content.Intent.ACTION_VIEW,
+                            androidx.core.net.toUri("https://musikkk.ru/billing"),
+                        )
+                        runCatching { context.startActivity(intent) }
+                    },
+                )
+            }
         }
     }
 
