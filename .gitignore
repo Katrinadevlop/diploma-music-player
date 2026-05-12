@@ -1,9 +1,14 @@
 # Local agent instructions (keep private)
 AGENT.md
+CLAUDE.md
 
-# Gradle
+# Кэши Gradle / Kotlin
 .gradle/
+.kotlin/
 build/
+
+# Воркстри и данные сессий Claude Code
+.claude/
 
 # Local configuration file (sdk path, etc)
 local.properties

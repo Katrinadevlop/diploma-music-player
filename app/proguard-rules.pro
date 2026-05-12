@@ -1,21 +1,42 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Сохраняем сигнатуры дженериков — Retrofit использует их через рефлексию.
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Retrofit
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn javax.annotation.**
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# OkHttp
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# kotlinx.serialization
+-keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+-keep,includedescriptorclasses class ru.musikkk.player.**$$serializer { *; }
+-keepclassmembers class ru.musikkk.player.** {
+    *** Companion;
+}
+-keepclasseswithmembers class ru.musikkk.player.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+
+# Сгенерированный код Hilt
+-keep class dagger.hilt.** { *; }
+-keep class hilt_aggregated_deps.** { *; }
+-keep class * extends dagger.hilt.android.internal.managers.ViewComponentManager$FragmentContextWrapper
+
+# Сохраняем дженерик-информацию для компонент-модели Hilt.
+-keepclassmembers class ** {
+    @dagger.* <methods>;
+}
+
+# Media3
+-keep class androidx.media3.** { *; }
+-dontwarn androidx.media3.**

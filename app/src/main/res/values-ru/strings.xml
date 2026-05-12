@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Musikkk</string>
+
+    <!-- Авторизация -->
+    <string name="auth_login_title">Вход</string>
+    <string name="auth_register_title">Регистрация</string>
+    <string name="auth_field_username">Имя пользователя</string>
+    <string name="auth_field_password">Пароль</string>
+    <string name="auth_field_email">Почта</string>
+    <string name="auth_action_login">Войти</string>
+    <string name="auth_action_register">Зарегистрироваться</string>
+    <string name="auth_action_logout">Выйти</string>
+    <string name="auth_error_invalid_credentials">Неверный логин или пароль</string>
+    <string name="auth_error_email_not_verified">Подтвердите почту, чтобы продолжить</string>
+    <string name="auth_error_rate_limited">Слишком много попыток, попробуйте позже</string>
+    <string name="auth_error_network">Ошибка сети</string>
+
+    <!-- Общее -->
+    <string name="common_loading">Загрузка…</string>
+    <string name="common_retry">Повторить</string>
+    <string name="common_cancel">Отмена</string>
+    <string name="common_offline">Нет соединения</string>
+    <string name="common_empty">Пока ничего нет</string>
+
+    <!-- Навигация -->
+    <string name="nav_home">Главная</string>
+    <string name="nav_library">Библиотека</string>
+    <string name="nav_search">Поиск</string>
+    <string name="nav_settings">Настройки</string>
+</resources>
