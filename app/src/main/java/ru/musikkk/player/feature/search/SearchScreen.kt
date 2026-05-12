@@ -50,6 +50,7 @@ import ru.musikkk.player.R
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.domain.library.Track
 import ru.musikkk.player.ui.components.CoverImage
+import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
 import ru.musikkk.player.ui.format.formatDuration
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
@@ -71,6 +72,8 @@ fun SearchScreen(
         focusRequester.requestFocus()
     }
 
+    androidx.compose.foundation.layout.Box(modifier = Modifier.fillMaxSize()) {
+    PlaybackAwareBackdrop()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -92,11 +95,11 @@ fun SearchScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
                 ),
             )
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = androidx.compose.ui.graphics.Color.Transparent,
     ) { padding ->
         Box(
             modifier = Modifier
@@ -115,6 +118,7 @@ fun SearchScreen(
             }
         }
     }
+    } // closes outer Box around backdrop
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

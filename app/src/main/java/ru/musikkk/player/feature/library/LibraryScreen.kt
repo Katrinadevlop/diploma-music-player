@@ -48,6 +48,7 @@ import kotlinx.coroutines.flow.collectLatest
 import ru.musikkk.player.R
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.ui.components.CoverImage
+import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
@@ -72,6 +73,9 @@ fun LibraryScreen(
             }
         }
     }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        PlaybackAwareBackdrop()
 
     Scaffold(
         topBar = {
@@ -107,11 +111,11 @@ fun LibraryScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
                 ),
             )
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = androidx.compose.ui.graphics.Color.Transparent,
     ) { padding ->
         Box(
             modifier = Modifier
@@ -159,6 +163,7 @@ fun LibraryScreen(
             }
         }
     }
+    } // closes outer Box around backdrop
 }
 
 @Composable

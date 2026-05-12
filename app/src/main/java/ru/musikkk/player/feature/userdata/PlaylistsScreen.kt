@@ -53,6 +53,8 @@ import kotlinx.coroutines.launch
 import ru.musikkk.player.R
 import ru.musikkk.player.data.user.PlaylistsRepository
 import ru.musikkk.player.domain.user.Playlist
+import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
+import ru.musikkk.player.ui.components.SectionCover
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
 data class PlaylistsUiState(
@@ -98,6 +100,8 @@ fun PlaylistsScreen(
     var creating by remember { mutableStateOf(false) }
     var deletingId by remember { mutableStateOf<String?>(null) }
 
+    Box(modifier = Modifier.fillMaxSize()) {
+    PlaybackAwareBackdrop()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -111,7 +115,7 @@ fun PlaylistsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
                 ),
             )
         },
@@ -123,7 +127,7 @@ fun PlaylistsScreen(
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = androidx.compose.ui.graphics.Color.Transparent,
     ) { padding ->
         Box(
             modifier = Modifier
@@ -186,6 +190,7 @@ fun PlaylistsScreen(
             )
         }
     }
+    } // closes outer Box around backdrop
 }
 
 @Composable
@@ -201,16 +206,11 @@ private fun PlaylistRow(
             .padding(horizontal = MusikkkSpacing.s5, vertical = MusikkkSpacing.s3),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
+        SectionCover(
+            icon = Icons.AutoMirrored.Filled.QueueMusic,
+            contentDescription = null,
             modifier = Modifier.size(48.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.QueueMusic,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        }
+        )
         Spacer(Modifier.size(MusikkkSpacing.s3))
         Column(modifier = Modifier.weight(1f)) {
             Text(

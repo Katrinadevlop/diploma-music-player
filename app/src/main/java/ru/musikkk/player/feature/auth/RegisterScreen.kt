@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
 import ru.musikkk.player.R
 import ru.musikkk.player.ui.components.MusikkkBackdrop
+import ru.musikkk.player.ui.components.MusikkkTextField
 import ru.musikkk.player.ui.components.PasswordField
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
@@ -78,21 +79,16 @@ fun RegisterScreen(
         )
         Spacer(Modifier.height(MusikkkSpacing.s6))
 
-        OutlinedTextField(
+        MusikkkTextField(
             value = state.username,
             onValueChange = viewModel::onUsernameChange,
+            label = stringResource(id = R.string.auth_field_username),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
             enabled = !state.isSubmitting,
             isError = state.usernameError != null,
-            label = { Text(stringResource(id = R.string.auth_field_username)) },
-            supportingText = {
-                Text(
-                    stringResource(
-                        id = state.usernameError ?: R.string.auth_field_username_hint,
-                    ),
-                )
-            },
+            supportingText = stringResource(
+                id = state.usernameError ?: R.string.auth_field_username_hint,
+            ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Ascii,
                 imeAction = ImeAction.Next,
@@ -103,17 +99,14 @@ fun RegisterScreen(
 
         Spacer(Modifier.height(MusikkkSpacing.s3))
 
-        OutlinedTextField(
+        MusikkkTextField(
             value = state.email,
             onValueChange = viewModel::onEmailChange,
+            label = stringResource(id = R.string.auth_field_email_required),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
             enabled = !state.isSubmitting,
             isError = state.emailError != null,
-            label = { Text(stringResource(id = R.string.auth_field_email_required)) },
-            supportingText = state.emailError?.let { resId ->
-                { Text(stringResource(id = resId)) }
-            },
+            supportingText = state.emailError?.let { stringResource(id = it) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
@@ -145,17 +138,14 @@ fun RegisterScreen(
 
         Spacer(Modifier.height(MusikkkSpacing.s3))
 
-        OutlinedTextField(
+        MusikkkTextField(
             value = state.passwordConfirm,
             onValueChange = viewModel::onPasswordConfirmChange,
+            label = stringResource(id = R.string.auth_field_password_confirm),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
             enabled = !state.isSubmitting,
             isError = state.passwordConfirmError != null,
-            label = { Text(stringResource(id = R.string.auth_field_password_confirm)) },
-            supportingText = state.passwordConfirmError?.let { resId ->
-                { Text(stringResource(id = resId)) }
-            },
+            supportingText = state.passwordConfirmError?.let { stringResource(id = it) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,

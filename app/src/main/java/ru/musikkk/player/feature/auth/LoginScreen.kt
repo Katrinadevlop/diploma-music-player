@@ -19,7 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import kotlinx.coroutines.flow.collectLatest
 import ru.musikkk.player.R
 import ru.musikkk.player.ui.components.GlassSurface
 import ru.musikkk.player.ui.components.MusikkkBackdrop
+import ru.musikkk.player.ui.components.MusikkkTextField
 import ru.musikkk.player.ui.components.PasswordField
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
@@ -94,15 +94,14 @@ fun LoginScreen(
 
                     Spacer(Modifier.height(MusikkkSpacing.s5))
 
-                    OutlinedTextField(
+                    MusikkkTextField(
                         value = state.username,
                         onValueChange = viewModel::onUsernameChange,
+                        label = stringResource(id = R.string.auth_field_username),
                         modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
                         enabled = !state.isSubmitting,
                         isError = state.errorRes != null,
-                        label = { Text(stringResource(id = R.string.auth_field_username)) },
-                        supportingText = { Text(stringResource(id = R.string.auth_field_username_hint)) },
+                        supportingText = stringResource(id = R.string.auth_field_username_hint),
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Ascii,
                             imeAction = ImeAction.Next,

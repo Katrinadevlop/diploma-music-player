@@ -43,6 +43,7 @@ import ru.musikkk.player.data.user.PlayPathsAction
 import ru.musikkk.player.data.user.PlaylistsRepository
 import ru.musikkk.player.domain.library.Track
 import ru.musikkk.player.domain.user.Playlist
+import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
 import ru.musikkk.player.ui.components.TrackListRow
 
 data class PlaylistDetailUiState(
@@ -107,6 +108,8 @@ fun PlaylistDetailScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    Box(modifier = Modifier.fillMaxSize()) {
+    PlaybackAwareBackdrop(fallbackCoverId = state.tracks.firstOrNull()?.coverId)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -126,11 +129,11 @@ fun PlaylistDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    containerColor = androidx.compose.ui.graphics.Color.Transparent,
                 ),
             )
         },
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = androidx.compose.ui.graphics.Color.Transparent,
     ) { padding ->
         Box(
             modifier = Modifier
@@ -169,4 +172,5 @@ fun PlaylistDetailScreen(
             }
         }
     }
+    } // closes outer Box around backdrop
 }

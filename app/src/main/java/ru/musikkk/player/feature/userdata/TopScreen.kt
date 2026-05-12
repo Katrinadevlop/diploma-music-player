@@ -1,5 +1,7 @@
 package ru.musikkk.player.feature.userdata
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -63,8 +65,9 @@ fun TopScreen(
     viewModel: TopViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    SimpleTrackListScaffold(
+    UserSectionScaffold(
         title = stringResource(id = R.string.hub_top),
+        sectionIcon = Icons.Filled.Whatshot,
         onBack = onBack,
         isLoading = state.isLoading,
         tracks = state.tracks,

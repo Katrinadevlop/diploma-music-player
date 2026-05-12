@@ -1,7 +1,6 @@
 package ru.musikkk.player.ui.components
 
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -14,10 +13,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import ru.musikkk.player.R
 
 /**
- * Поле ввода пароля с переключателем «показать / скрыть».
- *
- * Переключатель сделан текстовой кнопкой, чтобы не тянуть в проект
- * `material-icons-extended` ради двух иконок.
+ * Поле ввода пароля в стилистике [MusikkkTextField] + переключатель
+ * «показать / скрыть» текстовой кнопкой (чтобы не тянуть
+ * `material-icons-extended` ради двух иконок).
  */
 @Composable
 fun PasswordField(
@@ -29,20 +27,21 @@ fun PasswordField(
     enabled: Boolean = true,
     isError: Boolean = false,
     imeAction: ImeAction = ImeAction.Done,
+    supportingText: String? = null,
 ) {
-    OutlinedTextField(
+    MusikkkTextField(
         value = value,
         onValueChange = onValueChange,
+        label = stringResource(id = R.string.auth_field_password),
         modifier = modifier,
         enabled = enabled,
         isError = isError,
-        singleLine = true,
-        label = { Text(stringResource(id = R.string.auth_field_password)) },
+        supportingText = supportingText,
+        visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             imeAction = imeAction,
         ),
-        visualTransformation = if (isVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {
             TextButton(onClick = onToggleVisibility, enabled = enabled) {
                 Text(
