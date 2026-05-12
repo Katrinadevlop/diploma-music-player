@@ -22,7 +22,7 @@ import ru.musikkk.player.core.network.dto.ToggleLikeResponse
 import ru.musikkk.player.core.network.dto.UpdatePlaylistRequest
 
 /**
- * Эндпоинты `/api/user/*` — пользовательские данные (лайки, плейлисты,
+ * Эндпоинты `/api/user/...` — пользовательские данные (лайки, плейлисты,
  * recent, top, continue). Все требуют авторизации.
  *
  * Сервер `/api/user/continue` возвращает либо JSON-объект, либо JSON-null.
