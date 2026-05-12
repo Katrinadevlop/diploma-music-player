@@ -73,6 +73,15 @@
     <string name="release_not_found">Релиз не найден</string>
     <string name="release_track_number_placeholder">—</string>
 
+    <!-- Поиск -->
+    <string name="search_title">Поиск</string>
+    <string name="search_hint">Артист, релиз или трек</string>
+    <string name="search_clear">Очистить запрос</string>
+    <string name="search_section_releases">Релизы</string>
+    <string name="search_section_tracks">Треки</string>
+    <string name="search_empty_initial">Начните вводить, чтобы поискать в библиотеке.</string>
+    <string name="search_empty_no_results">Ничего не найдено по этому запросу.</string>
+
     <!-- Настройки -->
     <string name="settings_title">Настройки</string>
     <string name="settings_section_appearance">Внешний вид</string>

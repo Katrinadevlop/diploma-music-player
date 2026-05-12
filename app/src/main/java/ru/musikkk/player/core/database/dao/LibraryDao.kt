@@ -42,6 +42,42 @@ interface LibraryDao {
     @Query("SELECT COUNT(*) FROM tracks WHERE releaseId = :releaseId")
     suspend fun countTracksInRelease(releaseId: String): Int
 
+    // ----- поиск -----
+
+    /**
+     * Поиск по релизам: совпадение в названии релиза или имени артиста.
+     * `LIKE` сравнение case-insensitive через `COLLATE NOCASE`. Сначала
+     * идут те, у кого `name` начинается с запроса (prefix-match), потом
+     * остальные. `LIMIT` нужен, чтобы крупная библиотека не повесила UI.
+     */
+    @Query(
+        """
+        SELECT * FROM releases
+        WHERE name LIKE '%' || :query || '%' COLLATE NOCASE
+           OR artistName LIKE '%' || :query || '%' COLLATE NOCASE
+        ORDER BY
+            CASE WHEN name LIKE :query || '%' COLLATE NOCASE THEN 0 ELSE 1 END,
+            artistName COLLATE NOCASE ASC,
+            name COLLATE NOCASE ASC
+        LIMIT :limit
+        """
+    )
+    fun searchReleases(query: String, limit: Int): Flow<List<ReleaseEntity>>
+
+    /** Поиск по трекам: совпадение в названии трека или имени артиста. */
+    @Query(
+        """
+        SELECT * FROM tracks
+        WHERE title LIKE '%' || :query || '%' COLLATE NOCASE
+           OR artistName LIKE '%' || :query || '%' COLLATE NOCASE
+        ORDER BY
+            CASE WHEN title LIKE :query || '%' COLLATE NOCASE THEN 0 ELSE 1 END,
+            title COLLATE NOCASE ASC
+        LIMIT :limit
+        """
+    )
+    fun searchTracks(query: String, limit: Int): Flow<List<TrackEntity>>
+
     // ----- запись -----
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

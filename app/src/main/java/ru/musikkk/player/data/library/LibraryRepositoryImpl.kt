@@ -37,6 +37,16 @@ class LibraryRepositoryImpl @Inject constructor(
             entities.map { it.toDomain() }
         }
 
+    override fun searchReleases(query: String, limit: Int): Flow<List<Release>> =
+        libraryDao.searchReleases(query, limit).map { entities ->
+            entities.map { it.toDomain(trackCount = 0) }
+        }
+
+    override fun searchTracks(query: String, limit: Int): Flow<List<Track>> =
+        libraryDao.searchTracks(query, limit).map { entities ->
+            entities.map { it.toDomain() }
+        }
+
     override suspend fun refresh() {
         val response = libraryApi.library()
         val snapshot = response.toSnapshot()

@@ -15,6 +15,12 @@ interface LibraryRepository {
     /** Треки конкретного релиза, упорядоченные. */
     fun observeReleaseTracks(releaseId: String): Flow<List<Track>>
 
+    /** Поиск релизов: по названию релиза или имени артиста. */
+    fun searchReleases(query: String, limit: Int = 30): Flow<List<Release>>
+
+    /** Поиск треков: по названию трека или имени артиста. */
+    fun searchTracks(query: String, limit: Int = 50): Flow<List<Track>>
+
     /**
      * Тянет свежие данные с сервера и переписывает локальный кэш.
      * Бросает исключение наверх — пусть ViewModel решает, как показать

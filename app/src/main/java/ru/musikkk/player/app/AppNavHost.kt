@@ -24,6 +24,7 @@ import ru.musikkk.player.feature.library.LibraryScreen
 import ru.musikkk.player.feature.player.PlayerScreen
 import ru.musikkk.player.feature.release.ReleaseDetailScreen
 import ru.musikkk.player.feature.release.ReleaseDetailViewModel
+import ru.musikkk.player.feature.search.SearchScreen
 import ru.musikkk.player.feature.settings.SettingsScreen
 
 object Routes {
@@ -33,6 +34,7 @@ object Routes {
     const val Library = "library"
     const val Player = "player"
     const val Settings = "settings"
+    const val Search = "search"
 
     private const val RELEASE = "release"
 
@@ -154,11 +156,30 @@ fun AppNavHost(
                             launchSingleTop = true
                         }
                     },
+                    onOpenSearch = {
+                        navController.navigate(Routes.Search) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
 
             composable(Routes.Settings) {
                 SettingsScreen(onBack = { navController.popBackStack() })
+            }
+
+            composable(Routes.Search) {
+                SearchScreen(
+                    onBack = { navController.popBackStack() },
+                    onReleaseClick = { release ->
+                        navController.navigate(Routes.release(release.id))
+                    },
+                    onTrackClick = { track ->
+                        // Открываем релиз трека — пользователь сможет
+                        // запустить воспроизведение оттуда.
+                        navController.navigate(Routes.release(track.releaseId))
+                    },
+                )
             }
 
             composable(
