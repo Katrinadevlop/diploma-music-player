@@ -3,17 +3,31 @@
 
     <!-- Авторизация -->
     <string name="auth_login_title">Sign in</string>
+    <string name="auth_login_subtitle">to your music library</string>
     <string name="auth_register_title">Create account</string>
     <string name="auth_field_username">Username</string>
+    <string name="auth_field_username_hint">3–32 latin chars, digits, _ or -</string>
     <string name="auth_field_password">Password</string>
     <string name="auth_field_email">Email</string>
     <string name="auth_action_login">Log in</string>
     <string name="auth_action_register">Register</string>
     <string name="auth_action_logout">Log out</string>
+    <string name="auth_password_show">Show password</string>
+    <string name="auth_password_hide">Hide password</string>
+    <string name="auth_login_no_account">Don\'t have an account?</string>
+    <string name="auth_login_register_link">Sign up</string>
+    <string name="auth_register_register_in_browser">Open registration in browser</string>
+    <string name="auth_register_browser_hint">Registration with email confirmation lives on the web for now.</string>
     <string name="auth_error_invalid_credentials">Invalid username or password</string>
     <string name="auth_error_email_not_verified">Confirm your email to continue</string>
     <string name="auth_error_rate_limited">Too many attempts, try again later</string>
-    <string name="auth_error_network">Network error</string>
+    <string name="auth_error_network">Network error. Check connection and retry.</string>
+    <string name="auth_error_unknown">Something went wrong. Try again.</string>
+    <string name="auth_error_empty_fields">Fill in both fields</string>
+
+    <!-- Главный экран -->
+    <string name="home_greeting">Hi, %1$s</string>
+    <string name="home_placeholder_body">Library, player and uploads land in the next iterations.</string>
 
     <!-- Общее -->
     <string name="common_loading">Loading…</string>

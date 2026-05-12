@@ -3,17 +3,31 @@
 
     <!-- Авторизация -->
     <string name="auth_login_title">Вход</string>
+    <string name="auth_login_subtitle">в свою музыкальную библиотеку</string>
     <string name="auth_register_title">Регистрация</string>
     <string name="auth_field_username">Имя пользователя</string>
+    <string name="auth_field_username_hint">3–32 латинских символа, цифры, _ или -</string>
     <string name="auth_field_password">Пароль</string>
     <string name="auth_field_email">Почта</string>
     <string name="auth_action_login">Войти</string>
     <string name="auth_action_register">Зарегистрироваться</string>
     <string name="auth_action_logout">Выйти</string>
+    <string name="auth_password_show">Показать пароль</string>
+    <string name="auth_password_hide">Скрыть пароль</string>
+    <string name="auth_login_no_account">Нет аккаунта?</string>
+    <string name="auth_login_register_link">Зарегистрироваться</string>
+    <string name="auth_register_register_in_browser">Открыть регистрацию в браузере</string>
+    <string name="auth_register_browser_hint">Регистрация с подтверждением почты пока живёт на сайте.</string>
     <string name="auth_error_invalid_credentials">Неверный логин или пароль</string>
     <string name="auth_error_email_not_verified">Подтвердите почту, чтобы продолжить</string>
     <string name="auth_error_rate_limited">Слишком много попыток, попробуйте позже</string>
-    <string name="auth_error_network">Ошибка сети</string>
+    <string name="auth_error_network">Ошибка сети. Проверьте соединение и попробуйте снова.</string>
+    <string name="auth_error_unknown">Что-то пошло не так. Попробуйте ещё раз.</string>
+    <string name="auth_error_empty_fields">Заполните оба поля</string>
+
+    <!-- Главный экран -->
+    <string name="home_greeting">Привет, %1$s</string>
+    <string name="home_placeholder_body">Библиотека, плеер и загрузки появятся в следующих итерациях.</string>
 
     <!-- Общее -->
     <string name="common_loading">Загрузка…</string>
