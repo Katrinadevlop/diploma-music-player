@@ -177,9 +177,10 @@ fun LoginScreen(
 @Composable
 internal fun BrandHeader() {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+        // На вебе бренд — 34px / 700. Берём чуть выше середины headline-шкалы Material3.
         Text(
             text = "Musikkk",
-            style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.primary,
         )
         Text(

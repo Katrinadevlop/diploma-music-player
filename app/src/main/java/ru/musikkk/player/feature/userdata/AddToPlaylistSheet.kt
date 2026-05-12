@@ -21,7 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -46,6 +45,7 @@ import kotlinx.coroutines.launch
 import ru.musikkk.player.R
 import ru.musikkk.player.data.user.PlaylistsRepository
 import ru.musikkk.player.domain.user.Playlist
+import ru.musikkk.player.ui.components.MusikkkTextField
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
 @HiltViewModel
@@ -131,11 +131,10 @@ fun AddToPlaylistSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(MusikkkSpacing.s3),
             ) {
-                OutlinedTextField(
+                MusikkkTextField(
                     value = newName,
                     onValueChange = { newName = it },
-                    singleLine = true,
-                    label = { Text(stringResource(id = R.string.playlists_name_label)) },
+                    label = stringResource(id = R.string.playlists_name_label),
                     modifier = Modifier.weight(1f),
                 )
                 Button(

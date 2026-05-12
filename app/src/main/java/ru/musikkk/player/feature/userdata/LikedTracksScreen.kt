@@ -21,6 +21,7 @@ import ru.musikkk.player.data.library.LibraryRepository
 import ru.musikkk.player.data.user.LikesRepository
 import ru.musikkk.player.data.user.PlayPathsAction
 import ru.musikkk.player.domain.library.Track
+import ru.musikkk.player.ui.components.LikesPatternOverlay
 
 data class LikedTracksUiState(
     val tracks: List<Track> = emptyList(),
@@ -69,5 +70,8 @@ fun LikedTracksScreen(
         tracks = state.tracks,
         emptyMessage = stringResource(id = R.string.liked_empty),
         onTrackClick = viewModel::playFromIndex,
+        // На вебе у Liked-страницы свой «обоиный» фон с точками
+        // (`likes_bg.svg`) — повторяем его вместо стандартного backdrop'a.
+        backdrop = { LikesPatternOverlay() },
     )
 }

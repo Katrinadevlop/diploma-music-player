@@ -24,7 +24,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,6 +52,7 @@ import kotlinx.coroutines.launch
 import ru.musikkk.player.R
 import ru.musikkk.player.data.user.PlaylistsRepository
 import ru.musikkk.player.domain.user.Playlist
+import ru.musikkk.player.ui.components.MusikkkTextField
 import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
 import ru.musikkk.player.ui.components.SectionCover
 import ru.musikkk.player.ui.theme.MusikkkSpacing
@@ -246,11 +246,10 @@ private fun CreatePlaylistDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(id = R.string.playlists_create_title)) },
         text = {
-            OutlinedTextField(
+            MusikkkTextField(
                 value = name,
                 onValueChange = { name = it },
-                singleLine = true,
-                label = { Text(stringResource(id = R.string.playlists_name_label)) },
+                label = stringResource(id = R.string.playlists_name_label),
             )
         },
         confirmButton = {

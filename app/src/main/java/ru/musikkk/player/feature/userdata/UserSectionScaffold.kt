@@ -54,9 +54,12 @@ internal fun UserSectionScaffold(
     tracks: List<Track>,
     emptyMessage: String,
     onTrackClick: (index: Int) -> Unit,
+    backdrop: @Composable () -> Unit = {
+        PlaybackAwareBackdrop(fallbackCoverId = tracks.firstOrNull()?.coverId)
+    },
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        PlaybackAwareBackdrop(fallbackCoverId = tracks.firstOrNull()?.coverId)
+        backdrop()
 
         Scaffold(
             topBar = {
