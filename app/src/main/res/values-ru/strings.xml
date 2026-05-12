@@ -122,6 +122,41 @@
     <string name="settings_section_filter_all">Все типы</string>
     <string name="settings_only_downloaded">Показывать только скачанные</string>
 
+    <!-- Хаб «Моя музыка» -->
+    <string name="hub_title">Моя музыка</string>
+    <string name="hub_liked">Лайки</string>
+    <string name="hub_liked_subtitle">Треки, помеченные сердечком</string>
+    <string name="hub_playlists">Плейлисты</string>
+    <string name="hub_playlists_subtitle">Ваши подборки</string>
+    <string name="hub_recent">Недавнее</string>
+    <string name="hub_recent_subtitle">Что вы слушали недавно</string>
+    <string name="hub_top">Топ</string>
+    <string name="hub_top_subtitle">Что вы слушаете чаще всего</string>
+
+    <!-- Лайки -->
+    <string name="like_action_like">Поставить лайк</string>
+    <string name="like_action_unlike">Убрать лайк</string>
+    <string name="liked_empty">Пока ни одного лайка. Нажмите на сердечко у любого трека.</string>
+
+    <!-- Плейлисты -->
+    <string name="playlists_create">Создать</string>
+    <string name="playlists_create_title">Новый плейлист</string>
+    <string name="playlists_name_label">Название</string>
+    <string name="playlists_empty">Пока ни одного плейлиста. Нажмите «+», чтобы создать.</string>
+    <string name="playlists_not_found">Плейлист не найден</string>
+    <string name="playlists_delete_title">Удалить плейлист?</string>
+    <string name="playlists_delete_body">Плейлист «%1$s» будет удалён. Сами треки останутся в библиотеке.</string>
+    <string name="playlists_delete_confirm">Удалить</string>
+    <string name="playlist_detail_empty">Здесь пока нет треков. Добавьте через «+» в строке трека.</string>
+    <string name="playlist_add_title">Добавить в плейлист</string>
+    <string name="playlist_add_new_label">…или создайте новый</string>
+    <string name="playlist_remove_track">Убрать из плейлиста</string>
+
+    <!-- Recent / Top / Continue -->
+    <string name="recent_empty">В последнее время ничего не играли.</string>
+    <string name="top_empty">Топа пока нет. Послушайте что-нибудь.</string>
+    <string name="continue_title">ПРОДОЛЖИТЬ</string>
+
     <!-- Скачивание -->
     <string name="download_action_start">Скачать на телефон</string>
     <string name="download_action_cancel">Отменить скачивание</string>

@@ -17,9 +17,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.PlaylistAdd
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DownloadForOffline
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -32,6 +35,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -44,6 +50,7 @@ import ru.musikkk.player.domain.download.DownloadInfo
 import ru.musikkk.player.domain.download.DownloadStatus
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.domain.library.Track
+import ru.musikkk.player.feature.userdata.AddToPlaylistSheet
 import ru.musikkk.player.ui.components.CoverImage
 import ru.musikkk.player.ui.format.formatDuration
 import ru.musikkk.player.ui.format.formatReleaseYear
@@ -57,6 +64,7 @@ fun ReleaseDetailScreen(
     viewModel: ReleaseDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var addToPlaylistTarget by remember { mutableStateOf<Track?>(null) }
 
     Scaffold(
         topBar = {
@@ -100,11 +108,22 @@ fun ReleaseDetailScreen(
                     release = state.release!!,
                     tracks = state.tracks,
                     downloads = state.downloads,
+                    likedPaths = state.likedPaths,
                     onTrackClick = viewModel::playFromIndex,
                     onDownloadAction = viewModel::onDownloadAction,
+                    onToggleLike = viewModel::toggleLike,
+                    onAddToPlaylist = { track -> addToPlaylistTarget = track },
                 )
             }
         }
+    }
+
+    val target = addToPlaylistTarget
+    if (target != null) {
+        AddToPlaylistSheet(
+            trackPath = target.filePath,
+            onDismiss = { addToPlaylistTarget = null },
+        )
     }
 }
 
@@ -113,8 +132,11 @@ private fun Content(
     release: Release,
     tracks: List<Track>,
     downloads: Map<String, DownloadInfo>,
+    likedPaths: Set<String>,
     onTrackClick: (index: Int) -> Unit,
     onDownloadAction: (Track) -> Unit,
+    onToggleLike: (Track) -> Unit,
+    onAddToPlaylist: (Track) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -127,8 +149,11 @@ private fun Content(
             TrackRow(
                 track = track,
                 download = downloads[track.blobId],
+                isLiked = track.filePath in likedPaths,
                 onClick = { onTrackClick(index) },
                 onDownloadAction = { onDownloadAction(track) },
+                onToggleLike = { onToggleLike(track) },
+                onAddToPlaylist = { onAddToPlaylist(track) },
             )
             HorizontalDivider(
                 modifier = Modifier.padding(start = 88.dp),
@@ -188,8 +213,11 @@ private fun Header(release: Release, trackCount: Int) {
 private fun TrackRow(
     track: Track,
     download: DownloadInfo?,
+    isLiked: Boolean,
     onClick: () -> Unit,
     onDownloadAction: () -> Unit,
+    onToggleLike: () -> Unit,
+    onAddToPlaylist: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -209,7 +237,7 @@ private fun TrackRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Spacer(Modifier.size(MusikkkSpacing.s3))
+        Spacer(Modifier.size(MusikkkSpacing.s2))
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = track.title,
@@ -227,11 +255,29 @@ private fun TrackRow(
                 )
             }
         }
-        Spacer(Modifier.size(MusikkkSpacing.s2))
+
+        IconButton(onClick = onToggleLike, modifier = Modifier.size(36.dp)) {
+            Icon(
+                imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                contentDescription = stringResource(
+                    id = if (isLiked) R.string.like_action_unlike else R.string.like_action_like,
+                ),
+                tint = if (isLiked) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
+        IconButton(onClick = onAddToPlaylist, modifier = Modifier.size(36.dp)) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.PlaylistAdd,
+                contentDescription = stringResource(id = R.string.playlist_add_title),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
 
         DownloadIconButton(download = download, onClick = onDownloadAction)
 
-        Spacer(Modifier.size(MusikkkSpacing.s2))
+        Spacer(Modifier.size(MusikkkSpacing.s1))
         Text(
             text = formatDuration(track.duration),
             style = MaterialTheme.typography.bodyMedium,

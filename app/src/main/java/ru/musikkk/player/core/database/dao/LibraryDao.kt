@@ -42,6 +42,15 @@ interface LibraryDao {
     @Query("SELECT COUNT(*) FROM tracks WHERE releaseId = :releaseId")
     suspend fun countTracksInRelease(releaseId: String): Int
 
+    @Query("SELECT filePath FROM tracks WHERE blobId = :blobId LIMIT 1")
+    suspend fun findFilePath(blobId: String): String?
+
+    @Query("SELECT * FROM tracks WHERE filePath IN (:paths)")
+    suspend fun findTracksByPaths(paths: List<String>): List<TrackEntity>
+
+    @Query("SELECT * FROM tracks WHERE filePath = :path LIMIT 1")
+    suspend fun findTrackByPath(path: String): TrackEntity?
+
     // ----- поиск -----
 
     /**

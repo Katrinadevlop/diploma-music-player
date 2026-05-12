@@ -23,6 +23,8 @@ class MusikkkApp : Application(), ImageLoaderFactory, Configuration.Provider {
 
     @Inject lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject lateinit var playbackTracker: ru.musikkk.player.data.user.PlaybackTracker
+
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
@@ -30,6 +32,8 @@ class MusikkkApp : Application(), ImageLoaderFactory, Configuration.Provider {
         // Прогреваем in-memory кэш токена, чтобы AuthInterceptor OkHttp мог
         // прочитать его синхронно на самом первом сетевом запросе.
         appScope.launch { tokenStore.prime() }
+        // Запускаем сбор данных по воспроизведению (recent / playcounts / continue).
+        playbackTracker.start()
     }
 
     /**

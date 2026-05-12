@@ -21,6 +21,12 @@ interface LibraryRepository {
     /** Поиск треков: по названию трека или имени артиста. */
     fun searchTracks(query: String, limit: Int = 50): Flow<List<Track>>
 
+    /** Достаёт треки по списку `rel_path` (для лайков, recent, плейлистов). */
+    suspend fun tracksByPaths(paths: List<String>): List<Track>
+
+    /** Один трек по `rel_path` — для continue-карточки. */
+    suspend fun trackByPath(path: String): Track?
+
     /**
      * Тянет свежие данные с сервера и переписывает локальный кэш.
      * Бросает исключение наверх — пусть ViewModel решает, как показать

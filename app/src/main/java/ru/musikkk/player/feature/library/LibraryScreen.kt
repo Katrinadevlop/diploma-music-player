@@ -11,11 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudUpload
+import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -55,6 +59,7 @@ fun LibraryScreen(
     onOpenSettings: () -> Unit,
     onOpenSearch: () -> Unit,
     onOpenUploads: () -> Unit,
+    onOpenHub: () -> Unit,
     viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -77,6 +82,12 @@ fun LibraryScreen(
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search_title),
+                        )
+                    }
+                    IconButton(onClick = onOpenHub) {
+                        Icon(
+                            imageVector = Icons.Filled.LibraryMusic,
+                            contentDescription = stringResource(id = R.string.hub_title),
                         )
                     }
                     IconButton(onClick = onOpenUploads) {
@@ -126,6 +137,18 @@ fun LibraryScreen(
                     Column(modifier = Modifier.fillMaxSize()) {
                         if (state.isRefreshing) {
                             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                        }
+                        state.continueCard?.let { card ->
+                            ContinueCardView(
+                                card = card,
+                                onResume = viewModel::resumeContinue,
+                                modifier = Modifier
+                                    .padding(
+                                        horizontal = MusikkkSpacing.s4,
+                                        vertical = MusikkkSpacing.s2,
+                                    )
+                                    .fillMaxWidth(),
+                            )
                         }
                         ReleasesGrid(
                             releases = state.releases,
@@ -219,6 +242,55 @@ private fun ErrorBlock(
         OutlinedButton(onClick = onRetry) {
             Text(stringResource(id = R.string.common_retry))
         }
+    }
+}
+
+@Composable
+private fun ContinueCardView(
+    card: ContinueCard,
+    onResume: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    androidx.compose.foundation.layout.Row(
+        modifier = modifier
+            .clickable(onClick = onResume)
+            .padding(MusikkkSpacing.s3),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        CoverImage(
+            coverId = card.track.coverId,
+            contentDescription = card.track.title,
+            modifier = Modifier.size(56.dp),
+            fallbackText = card.track.title,
+            radius = MusikkkRadius.sm,
+        )
+        Spacer(Modifier.width(MusikkkSpacing.s3))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = stringResource(id = R.string.continue_title),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                text = card.track.title,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = card.track.artistName,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        Icon(
+            imageVector = Icons.Filled.PlayArrow,
+            contentDescription = stringResource(id = R.string.player_play),
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(36.dp),
+        )
     }
 }
 

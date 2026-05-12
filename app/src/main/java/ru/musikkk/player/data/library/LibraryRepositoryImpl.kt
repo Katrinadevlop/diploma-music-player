@@ -47,6 +47,16 @@ class LibraryRepositoryImpl @Inject constructor(
             entities.map { it.toDomain() }
         }
 
+    override suspend fun tracksByPaths(paths: List<String>): List<Track> {
+        if (paths.isEmpty()) return emptyList()
+        val byPath = libraryDao.findTracksByPaths(paths).associateBy { it.filePath }
+        // Сохраняем порядок входных rel_path (важно для Recent/Playlists).
+        return paths.mapNotNull { byPath[it]?.toDomain() }
+    }
+
+    override suspend fun trackByPath(path: String): Track? =
+        libraryDao.findTrackByPath(path)?.toDomain()
+
     override suspend fun refresh() {
         val response = libraryApi.library()
         val snapshot = response.toSnapshot()

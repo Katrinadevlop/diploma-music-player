@@ -24,9 +24,16 @@ import ru.musikkk.player.feature.library.LibraryScreen
 import ru.musikkk.player.feature.player.PlayerScreen
 import ru.musikkk.player.feature.release.ReleaseDetailScreen
 import ru.musikkk.player.feature.release.ReleaseDetailViewModel
+import ru.musikkk.player.feature.hub.HubScreen
 import ru.musikkk.player.feature.search.SearchScreen
 import ru.musikkk.player.feature.settings.SettingsScreen
 import ru.musikkk.player.feature.uploads.UploadsScreen
+import ru.musikkk.player.feature.userdata.LikedTracksScreen
+import ru.musikkk.player.feature.userdata.PlaylistDetailScreen
+import ru.musikkk.player.feature.userdata.PlaylistDetailViewModel
+import ru.musikkk.player.feature.userdata.PlaylistsScreen
+import ru.musikkk.player.feature.userdata.RecentScreen
+import ru.musikkk.player.feature.userdata.TopScreen
 
 object Routes {
     const val Login = "login"
@@ -37,11 +44,18 @@ object Routes {
     const val Settings = "settings"
     const val Search = "search"
     const val Uploads = "uploads"
+    const val Hub = "hub"
+    const val Liked = "liked"
+    const val Playlists = "playlists"
+    const val Recent = "recent"
+    const val Top = "top"
 
     private const val RELEASE = "release"
+    private const val PLAYLIST = "playlist"
 
     /** Шаблон маршрута для NavHost: `release/{releaseId}`. */
     const val ReleasePattern = "$RELEASE/{${ReleaseDetailViewModel.ARG_RELEASE_ID}}"
+    const val PlaylistDetailPattern = "$PLAYLIST/{${PlaylistDetailViewModel.ARG_PLAYLIST_ID}}"
 
     /**
      * id релиза собирается из `artist|section|name` и может содержать
@@ -49,6 +63,7 @@ object Routes {
      * поэтому при построении маршрута энкодим, а в ViewModel декодим.
      */
     fun release(releaseId: String): String = "$RELEASE/${Uri.encode(releaseId)}"
+    fun playlist(playlistId: String): String = "$PLAYLIST/${Uri.encode(playlistId)}"
 }
 
 /**
@@ -168,7 +183,54 @@ fun AppNavHost(
                             launchSingleTop = true
                         }
                     },
+                    onOpenHub = {
+                        navController.navigate(Routes.Hub) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
+            }
+
+            composable(Routes.Hub) {
+                HubScreen(
+                    onBack = { navController.popBackStack() },
+                    onOpenLiked = { navController.navigate(Routes.Liked) { launchSingleTop = true } },
+                    onOpenPlaylists = { navController.navigate(Routes.Playlists) { launchSingleTop = true } },
+                    onOpenRecent = { navController.navigate(Routes.Recent) { launchSingleTop = true } },
+                    onOpenTop = { navController.navigate(Routes.Top) { launchSingleTop = true } },
+                )
+            }
+
+            composable(Routes.Liked) {
+                LikedTracksScreen(onBack = { navController.popBackStack() })
+            }
+
+            composable(Routes.Playlists) {
+                PlaylistsScreen(
+                    onBack = { navController.popBackStack() },
+                    onOpenPlaylist = { playlist ->
+                        navController.navigate(Routes.playlist(playlist.id))
+                    },
+                )
+            }
+
+            composable(
+                route = Routes.PlaylistDetailPattern,
+                arguments = listOf(
+                    navArgument(PlaylistDetailViewModel.ARG_PLAYLIST_ID) {
+                        type = NavType.StringType
+                    },
+                ),
+            ) {
+                PlaylistDetailScreen(onBack = { navController.popBackStack() })
+            }
+
+            composable(Routes.Recent) {
+                RecentScreen(onBack = { navController.popBackStack() })
+            }
+
+            composable(Routes.Top) {
+                TopScreen(onBack = { navController.popBackStack() })
             }
 
             composable(Routes.Settings) {

@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -22,8 +24,16 @@ import ru.musikkk.player.core.database.dao.DownloadDao
 import ru.musikkk.player.data.auth.AuthRepository
 import ru.musikkk.player.data.library.LibraryRepository
 import ru.musikkk.player.data.settings.SettingsRepository
+import ru.musikkk.player.data.user.ContinueRepository
+import ru.musikkk.player.data.user.PlayPathsAction
 import ru.musikkk.player.domain.library.Release
+import ru.musikkk.player.domain.library.Track
 import ru.musikkk.player.domain.settings.LibraryFilters
+
+data class ContinueCard(
+    val track: Track,
+    val positionSeconds: Double,
+)
 
 data class LibraryUiState(
     val releases: List<Release> = emptyList(),
@@ -31,6 +41,7 @@ data class LibraryUiState(
     val isRefreshing: Boolean = false,
     @StringRes val errorRes: Int? = null,
     val filters: LibraryFilters = LibraryFilters(),
+    val continueCard: ContinueCard? = null,
 ) {
     val showEmptyState: Boolean
         get() = !isInitialLoading && errorRes == null && releases.isEmpty()
@@ -40,22 +51,45 @@ sealed class LibraryEvent {
     data object SignedOut : LibraryEvent()
 }
 
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
     private val libraryRepository: LibraryRepository,
     private val authRepository: AuthRepository,
     private val settingsRepository: SettingsRepository,
     private val downloadDao: DownloadDao,
+    private val continueRepository: ContinueRepository,
+    private val playPaths: PlayPathsAction,
 ) : ViewModel() {
 
     private val refreshState = MutableStateFlow(RefreshState())
+
+    /**
+     * Resolve continue → реальный Track из БД. `flatMapLatest` пересоздаёт
+     * подписку, когда меняется continue или библиотека: важно после
+     * первого refresh библиотеки — иначе Continue будет ссылаться на
+     * `rel_path`, которого ещё нет в Room.
+     */
+    private val continueCardFlow = combine(
+        continueRepository.state,
+        libraryRepository.observeReleases(),
+    ) { continueState, _ -> continueState }
+        .flatMapLatest { continueState ->
+            if (continueState == null) flowOf<ContinueCard?>(null)
+            else flowOf(
+                libraryRepository.trackByPath(continueState.trackPath)?.let { track ->
+                    ContinueCard(track = track, positionSeconds = continueState.timeSeconds)
+                }
+            )
+        }
 
     val state: StateFlow<LibraryUiState> = combine(
         libraryRepository.observeReleases(),
         downloadDao.observeAll(),
         settingsRepository.settingsFlow,
         refreshState,
-    ) { releases, downloads, settings, refresh ->
+        continueCardFlow,
+    ) { releases, downloads, settings, refresh, continueCard ->
         val downloadedReleaseIds = downloads
             .filter { it.status == STATUS_COMPLETED }
             .mapNotNull { it.releaseId }
@@ -68,6 +102,7 @@ class LibraryViewModel @Inject constructor(
             isRefreshing = refresh.isRefreshing,
             errorRes = refresh.errorRes,
             filters = settings.libraryFilters,
+            continueCard = continueCard,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -90,6 +125,13 @@ class LibraryViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.logout()
             _events.send(LibraryEvent.SignedOut)
+        }
+    }
+
+    fun resumeContinue() {
+        val card = state.value.continueCard ?: return
+        viewModelScope.launch {
+            playPaths(paths = listOf(card.track.filePath), startIndex = 0)
         }
     }
 

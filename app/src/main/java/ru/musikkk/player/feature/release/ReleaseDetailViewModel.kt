@@ -20,6 +20,7 @@ import ru.musikkk.player.data.download.DownloadRepository
 import ru.musikkk.player.data.library.LibraryRepository
 import ru.musikkk.player.data.playback.PlaybackController
 import ru.musikkk.player.data.settings.SettingsRepository
+import ru.musikkk.player.data.user.LikesRepository
 import ru.musikkk.player.domain.download.DownloadInfo
 import ru.musikkk.player.domain.download.DownloadStatus
 import ru.musikkk.player.domain.library.Release
@@ -30,6 +31,7 @@ data class ReleaseDetailUiState(
     val release: Release? = null,
     val tracks: List<Track> = emptyList(),
     val downloads: Map<String, DownloadInfo> = emptyMap(),
+    val likedPaths: Set<String> = emptySet(),
     val isLoading: Boolean = true,
 )
 
@@ -42,6 +44,7 @@ class ReleaseDetailViewModel @Inject constructor(
     private val playbackController: PlaybackController,
     private val settingsRepository: SettingsRepository,
     private val networkQualityResolver: NetworkQualityResolver,
+    private val likesRepository: LikesRepository,
 ) : ViewModel() {
 
     private val releaseId: String =
@@ -54,11 +57,13 @@ class ReleaseDetailViewModel @Inject constructor(
             combine(
                 libraryRepository.observeRelease(releaseId),
                 downloadsFlow,
-            ) { release, downloads ->
+                likesRepository.liked,
+            ) { release, downloads, liked ->
                 ReleaseDetailUiState(
                     release = release,
                     tracks = tracks,
                     downloads = downloads,
+                    likedPaths = liked,
                     isLoading = false,
                 )
             }
@@ -91,10 +96,13 @@ class ReleaseDetailViewModel @Inject constructor(
         }
     }
 
+    fun toggleLike(track: Track) {
+        viewModelScope.launch {
+            runCatching { likesRepository.toggle(track.filePath) }
+        }
+    }
+
     private suspend fun Track.toPlayable(variant: String?): PlayableTrack {
-        // Если файл уже на устройстве — играем его, иначе стримим. Локальный
-        // файл всегда оригинал (мы скачивали без variant), поэтому
-        // пользовательское качество к нему не применяем.
         val localFile = downloadRepository.localFile(blobId)
         val url = if (localFile != null) {
             Uri.fromFile(localFile).toString()

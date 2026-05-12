@@ -122,6 +122,41 @@
     <string name="settings_section_filter_all">All types</string>
     <string name="settings_only_downloaded">Show only downloaded</string>
 
+    <!-- Хаб «Your music» -->
+    <string name="hub_title">Your music</string>
+    <string name="hub_liked">Liked</string>
+    <string name="hub_liked_subtitle">Tracks you marked with a heart</string>
+    <string name="hub_playlists">Playlists</string>
+    <string name="hub_playlists_subtitle">Your collections</string>
+    <string name="hub_recent">Recent</string>
+    <string name="hub_recent_subtitle">Recently played tracks</string>
+    <string name="hub_top">Top</string>
+    <string name="hub_top_subtitle">Most played by you</string>
+
+    <!-- Likes -->
+    <string name="like_action_like">Like</string>
+    <string name="like_action_unlike">Unlike</string>
+    <string name="liked_empty">No liked tracks yet. Tap the heart on any track.</string>
+
+    <!-- Плейлисты -->
+    <string name="playlists_create">Create</string>
+    <string name="playlists_create_title">New playlist</string>
+    <string name="playlists_name_label">Name</string>
+    <string name="playlists_empty">No playlists yet. Tap «+» to create one.</string>
+    <string name="playlists_not_found">Playlist not found</string>
+    <string name="playlists_delete_title">Delete playlist?</string>
+    <string name="playlists_delete_body">Playlist «%1$s» will be removed. The tracks themselves stay in the library.</string>
+    <string name="playlists_delete_confirm">Delete</string>
+    <string name="playlist_detail_empty">No tracks here yet. Add some via the «+» on a track row.</string>
+    <string name="playlist_add_title">Add to playlist</string>
+    <string name="playlist_add_new_label">…or create a new one</string>
+    <string name="playlist_remove_track">Remove from playlist</string>
+
+    <!-- Recent / Top / Continue -->
+    <string name="recent_empty">Nothing played recently.</string>
+    <string name="top_empty">No top tracks yet. Listen to something.</string>
+    <string name="continue_title">CONTINUE LISTENING</string>
+
     <!-- Скачивание -->
     <string name="download_action_start">Download to phone</string>
     <string name="download_action_cancel">Cancel download</string>
