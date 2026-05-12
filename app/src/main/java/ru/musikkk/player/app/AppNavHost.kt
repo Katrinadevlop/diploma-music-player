@@ -26,6 +26,7 @@ import ru.musikkk.player.feature.release.ReleaseDetailScreen
 import ru.musikkk.player.feature.release.ReleaseDetailViewModel
 import ru.musikkk.player.feature.search.SearchScreen
 import ru.musikkk.player.feature.settings.SettingsScreen
+import ru.musikkk.player.feature.uploads.UploadsScreen
 
 object Routes {
     const val Login = "login"
@@ -35,6 +36,7 @@ object Routes {
     const val Player = "player"
     const val Settings = "settings"
     const val Search = "search"
+    const val Uploads = "uploads"
 
     private const val RELEASE = "release"
 
@@ -161,11 +163,20 @@ fun AppNavHost(
                             launchSingleTop = true
                         }
                     },
+                    onOpenUploads = {
+                        navController.navigate(Routes.Uploads) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
 
             composable(Routes.Settings) {
                 SettingsScreen(onBack = { navController.popBackStack() })
+            }
+
+            composable(Routes.Uploads) {
+                UploadsScreen(onBack = { navController.popBackStack() })
             }
 
             composable(Routes.Search) {

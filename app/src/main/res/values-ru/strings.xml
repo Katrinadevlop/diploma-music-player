@@ -73,6 +73,25 @@
     <string name="release_not_found">Релиз не найден</string>
     <string name="release_track_number_placeholder">—</string>
 
+    <!-- Загрузки -->
+    <string name="uploads_title">Загрузки</string>
+    <string name="uploads_pick_files">Выбрать файлы</string>
+    <string name="uploads_empty_title">Пока ни одной загрузки</string>
+    <string name="uploads_empty_body">Выберите аудиофайлы с телефона, чтобы добавить их в библиотеку.</string>
+    <string name="uploads_status_queued">В очереди</string>
+    <string name="uploads_status_running">Загрузка… %1$d%%</string>
+    <string name="uploads_status_completed">Загружено</string>
+    <string name="uploads_status_failed">Ошибка: %1$s</string>
+    <string name="uploads_action_cancel">Отменить загрузку</string>
+    <string name="uploads_action_retry">Повторить загрузку</string>
+    <string name="uploads_action_remove">Удалить из списка</string>
+    <string name="uploads_clear_completed">Очистить завершённые</string>
+    <string name="uploads_error_too_large">файл слишком большой</string>
+    <string name="uploads_error_unsupported">неподдерживаемый формат</string>
+    <string name="uploads_error_quota">место на сервере закончилось</string>
+    <string name="uploads_error_flac_quota">лимит FLAC исчерпан тарифом</string>
+    <string name="uploads_error_cancelled">отменено</string>
+
     <!-- Поиск -->
     <string name="search_title">Поиск</string>
     <string name="search_hint">Артист, релиз или трек</string>

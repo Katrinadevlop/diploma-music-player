@@ -9,7 +9,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import ru.musikkk.player.core.database.MusikkkDatabase
+import ru.musikkk.player.core.database.dao.DownloadDao
 import ru.musikkk.player.core.database.dao.LibraryDao
+import ru.musikkk.player.core.database.dao.UploadDao
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -30,6 +32,8 @@ object DatabaseModule {
     fun provideLibraryDao(database: MusikkkDatabase): LibraryDao = database.libraryDao()
 
     @Provides
-    fun provideDownloadDao(database: MusikkkDatabase): ru.musikkk.player.core.database.dao.DownloadDao =
-        database.downloadDao()
+    fun provideDownloadDao(database: MusikkkDatabase): DownloadDao = database.downloadDao()
+
+    @Provides
+    fun provideUploadDao(database: MusikkkDatabase): UploadDao = database.uploadDao()
 }

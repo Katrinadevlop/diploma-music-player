@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -53,6 +54,7 @@ fun LibraryScreen(
     onReleaseClick: (Release) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenSearch: () -> Unit,
+    onOpenUploads: () -> Unit,
     viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -75,6 +77,12 @@ fun LibraryScreen(
                         Icon(
                             imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(id = R.string.search_title),
+                        )
+                    }
+                    IconButton(onClick = onOpenUploads) {
+                        Icon(
+                            imageVector = Icons.Filled.CloudUpload,
+                            contentDescription = stringResource(id = R.string.uploads_title),
                         )
                     }
                     IconButton(onClick = onOpenSettings) {

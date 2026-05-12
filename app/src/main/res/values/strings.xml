@@ -73,6 +73,25 @@
     <string name="release_not_found">Release not found</string>
     <string name="release_track_number_placeholder">—</string>
 
+    <!-- Загрузки -->
+    <string name="uploads_title">Uploads</string>
+    <string name="uploads_pick_files">Pick files</string>
+    <string name="uploads_empty_title">No uploads yet</string>
+    <string name="uploads_empty_body">Pick audio files from your phone to add them to the library.</string>
+    <string name="uploads_status_queued">Queued</string>
+    <string name="uploads_status_running">Uploading… %1$d%%</string>
+    <string name="uploads_status_completed">Uploaded</string>
+    <string name="uploads_status_failed">Failed: %1$s</string>
+    <string name="uploads_action_cancel">Cancel upload</string>
+    <string name="uploads_action_retry">Retry upload</string>
+    <string name="uploads_action_remove">Remove from list</string>
+    <string name="uploads_clear_completed">Clear completed</string>
+    <string name="uploads_error_too_large">file is too large</string>
+    <string name="uploads_error_unsupported">unsupported format</string>
+    <string name="uploads_error_quota">storage limit reached</string>
+    <string name="uploads_error_flac_quota">FLAC limit reached on your plan</string>
+    <string name="uploads_error_cancelled">cancelled</string>
+
     <!-- Поиск -->
     <string name="search_title">Search</string>
     <string name="search_hint">Artist, release or track</string>
