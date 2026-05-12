@@ -16,7 +16,7 @@ import ru.musikkk.player.data.auth.AuthRepository
  * Один раз читает токен из DataStore через [AuthRepository.tokenFlow] и
  * решает, нужен ли пользователю экран входа или сразу домашний. После
  * первого решения маршрутом управляет уже сама навигация (Login.onSuccess
- * → Home, Home.onLogout → Login).
+ * → Library, Library.onLogout → Login).
  */
 @HiltViewModel
 class AppViewModel @Inject constructor(
@@ -24,7 +24,7 @@ class AppViewModel @Inject constructor(
 ) : ViewModel() {
 
     val startDestination: StateFlow<String?> = authRepository.tokenFlow
-        .map { token -> if (token != null) Routes.Home else Routes.Login }
+        .map { token -> if (token != null) Routes.Library else Routes.Login }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,

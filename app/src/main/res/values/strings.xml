@@ -29,6 +29,24 @@
     <string name="home_greeting">Hi, %1$s</string>
     <string name="home_placeholder_body">Library, player and uploads land in the next iterations.</string>
 
+    <!-- Библиотека -->
+    <string name="library_title">Library</string>
+    <string name="library_empty_title">No releases yet</string>
+    <string name="library_empty_body">Upload tracks via the web client at musikkk.ru — they will appear here.</string>
+    <string name="library_error_title">Couldn\'t load the library</string>
+    <string name="library_section_albums">Albums</string>
+    <string name="library_section_eps">EPs</string>
+    <string name="library_section_singles">Singles</string>
+    <string name="library_section_collabs">Collabs</string>
+    <string name="library_track_count_zero">no tracks</string>
+    <string name="library_track_count_one">%1$d track</string>
+    <string name="library_track_count_other">%1$d tracks</string>
+
+    <!-- Экран релиза -->
+    <string name="release_back">Back</string>
+    <string name="release_not_found">Release not found</string>
+    <string name="release_track_number_placeholder">—</string>
+
     <!-- Общее -->
     <string name="common_loading">Loading…</string>
     <string name="common_retry">Retry</string>

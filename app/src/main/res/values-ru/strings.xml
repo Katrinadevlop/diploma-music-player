@@ -29,6 +29,24 @@
     <string name="home_greeting">Привет, %1$s</string>
     <string name="home_placeholder_body">Библиотека, плеер и загрузки появятся в следующих итерациях.</string>
 
+    <!-- Библиотека -->
+    <string name="library_title">Библиотека</string>
+    <string name="library_empty_title">Пока ни одного релиза</string>
+    <string name="library_empty_body">Загрузите треки через веб-клиент на musikkk.ru — они появятся здесь.</string>
+    <string name="library_error_title">Не удалось загрузить библиотеку</string>
+    <string name="library_section_albums">Альбомы</string>
+    <string name="library_section_eps">EP</string>
+    <string name="library_section_singles">Синглы</string>
+    <string name="library_section_collabs">Коллабы</string>
+    <string name="library_track_count_zero">нет треков</string>
+    <string name="library_track_count_one">%1$d трек</string>
+    <string name="library_track_count_other">%1$d треков</string>
+
+    <!-- Экран релиза -->
+    <string name="release_back">Назад</string>
+    <string name="release_not_found">Релиз не найден</string>
+    <string name="release_track_number_placeholder">—</string>
+
     <!-- Общее -->
     <string name="common_loading">Загрузка…</string>
     <string name="common_retry">Повторить</string>
