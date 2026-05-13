@@ -72,6 +72,10 @@
         <item quantity="other">%1$d tracks</item>
     </plurals>
 
+    <!-- Экран артиста -->
+    <string name="artist_not_found">Artist not found</string>
+    <string name="artist_no_releases">No releases yet</string>
+
     <!-- Экран релиза -->
     <string name="release_back">Back</string>
     <string name="release_not_found">Release not found</string>

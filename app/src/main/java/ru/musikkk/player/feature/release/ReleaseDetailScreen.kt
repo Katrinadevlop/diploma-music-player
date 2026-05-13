@@ -63,6 +63,7 @@ import ru.musikkk.player.ui.util.tracksCountString
 @Composable
 fun ReleaseDetailScreen(
     onBack: () -> Unit,
+    onArtistClick: (artistId: String) -> Unit,
     viewModel: ReleaseDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -119,6 +120,7 @@ fun ReleaseDetailScreen(
                     onDownloadAction = viewModel::onDownloadAction,
                     onToggleLike = viewModel::toggleLike,
                     onAddToPlaylist = { track -> addToPlaylistTarget = track },
+                    onArtistClick = { onArtistClick(state.release!!.artistId) },
                 )
             }
         }
@@ -144,13 +146,14 @@ private fun Content(
     onDownloadAction: (Track) -> Unit,
     onToggleLike: (Track) -> Unit,
     onAddToPlaylist: (Track) -> Unit,
+    onArtistClick: () -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(0.dp),
     ) {
         item(key = "header") {
-            Header(release = release, trackCount = tracks.size)
+            Header(release = release, trackCount = tracks.size, onArtistClick = onArtistClick)
         }
         itemsIndexed(tracks, key = { _, t -> t.blobId }) { index, track ->
             TrackRow(
@@ -171,7 +174,7 @@ private fun Content(
 }
 
 @Composable
-private fun Header(release: Release, trackCount: Int) {
+private fun Header(release: Release, trackCount: Int, onArtistClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -198,7 +201,8 @@ private fun Header(release: Release, trackCount: Int) {
         Text(
             text = release.artistName,
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable(onClick = onArtistClick),
         )
 
         val year = formatReleaseYear(release.releaseDate, release.year)

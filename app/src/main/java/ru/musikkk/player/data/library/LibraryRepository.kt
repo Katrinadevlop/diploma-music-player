@@ -1,6 +1,7 @@
 package ru.musikkk.player.data.library
 
 import kotlinx.coroutines.flow.Flow
+import ru.musikkk.player.domain.library.Artist
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.domain.library.Track
 
@@ -8,6 +9,15 @@ interface LibraryRepository {
 
     /** Поток релизов из локального кэша. UI наблюдает за ним напрямую. */
     fun observeReleases(): Flow<List<Release>>
+
+    /** Все артисты в библиотеке, упорядоченные по имени. */
+    fun observeArtists(): Flow<List<Artist>>
+
+    /** Один артист — для шапки экрана артиста. */
+    fun observeArtist(artistId: String): Flow<Artist?>
+
+    /** Все релизы конкретного артиста (для группировки по секциям на UI). */
+    fun observeReleasesByArtist(artistId: String): Flow<List<Release>>
 
     /** Один релиз — для шапки экрана деталей. */
     fun observeRelease(releaseId: String): Flow<Release?>

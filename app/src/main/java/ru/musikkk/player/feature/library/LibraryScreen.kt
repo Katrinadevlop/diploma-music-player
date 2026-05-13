@@ -49,6 +49,7 @@ import ru.musikkk.player.R
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.ui.components.CoverImage
 import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
+import ru.musikkk.player.ui.components.ReleaseCard
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
@@ -186,42 +187,6 @@ private fun ReleasesGrid(
         items(releases, key = { it.id }) { release ->
             ReleaseCard(release = release, onClick = { onReleaseClick(release) })
         }
-    }
-}
-
-@Composable
-private fun ReleaseCard(
-    release: Release,
-    onClick: () -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-    ) {
-        CoverImage(
-            coverId = release.coverId,
-            contentDescription = release.name,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
-            fallbackText = release.name,
-            radius = MusikkkRadius.md,
-        )
-        Spacer(Modifier.height(MusikkkSpacing.s2))
-        Text(
-            text = release.name,
-            style = MaterialTheme.typography.titleMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Text(
-            text = release.artistName,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
     }
 }
 

@@ -7,6 +7,7 @@ import ru.musikkk.player.core.network.dto.ArtistDto
 import ru.musikkk.player.core.network.dto.LibraryResponseDto
 import ru.musikkk.player.core.network.dto.ReleaseDto
 import ru.musikkk.player.core.network.dto.TrackDto
+import ru.musikkk.player.domain.library.Artist
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.domain.library.ReleaseSection
 import ru.musikkk.player.domain.library.Track
@@ -98,6 +99,12 @@ internal fun composeReleaseId(artistId: String, section: ReleaseSection, release
     "$artistId|${section.raw}|$releaseName"
 
 // ----- Entity → Domain -----
+
+internal fun ArtistEntity.toDomain(): Artist = Artist(
+    id = id,
+    name = name,
+    avatarCoverId = avatarCoverId,
+)
 
 internal fun ReleaseEntity.toDomain(trackCount: Int): Release = Release(
     id = id,

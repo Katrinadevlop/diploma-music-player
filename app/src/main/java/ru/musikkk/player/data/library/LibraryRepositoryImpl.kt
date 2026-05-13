@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import ru.musikkk.player.core.database.dao.LibraryDao
 import ru.musikkk.player.core.network.api.LibraryApi
+import ru.musikkk.player.domain.library.Artist
 import ru.musikkk.player.domain.library.Release
 import ru.musikkk.player.domain.library.Track
 
@@ -17,11 +18,25 @@ class LibraryRepositoryImpl @Inject constructor(
 ) : LibraryRepository {
 
     override fun observeReleases(): Flow<List<Release>> =
-        libraryDao.observeReleases().map { entities ->
-            // Считать треки на каждый релиз отдельным suspend-вызовом было
-            // бы N+1; для UI карточек хватает количества из ответа сервера,
-            // которое мы сюда не пробрасываем — добавим, когда понадобится.
-            entities.map { it.toDomain(trackCount = 0) }
+        combine(
+            libraryDao.observeReleases(),
+            libraryDao.observeTrackCountsByRelease(),
+        ) { entities, counts ->
+            entities.map { it.toDomain(trackCount = counts[it.id] ?: 0) }
+        }
+
+    override fun observeArtists(): Flow<List<Artist>> =
+        libraryDao.observeArtists().map { entities -> entities.map { it.toDomain() } }
+
+    override fun observeArtist(artistId: String): Flow<Artist?> =
+        libraryDao.observeArtist(artistId).map { it?.toDomain() }
+
+    override fun observeReleasesByArtist(artistId: String): Flow<List<Release>> =
+        combine(
+            libraryDao.observeReleasesByArtist(artistId),
+            libraryDao.observeTrackCountsByRelease(),
+        ) { entities, counts ->
+            entities.map { it.toDomain(trackCount = counts[it.id] ?: 0) }
         }
 
     override fun observeRelease(releaseId: String): Flow<Release?> =

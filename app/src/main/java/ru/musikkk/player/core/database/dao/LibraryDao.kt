@@ -2,6 +2,7 @@ package ru.musikkk.player.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.MapColumn
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
@@ -14,6 +15,35 @@ import ru.musikkk.player.core.database.entity.TrackEntity
 interface LibraryDao {
 
     // ----- наблюдение -----
+
+    @Query("SELECT * FROM artists ORDER BY name COLLATE NOCASE ASC")
+    fun observeArtists(): Flow<List<ArtistEntity>>
+
+    @Query("SELECT * FROM artists WHERE id = :artistId LIMIT 1")
+    fun observeArtist(artistId: String): Flow<ArtistEntity?>
+
+    @Query(
+        """
+        SELECT * FROM releases
+        WHERE artistId = :artistId
+        ORDER BY
+            CASE WHEN releaseDate IS NULL OR releaseDate = '' THEN 1 ELSE 0 END,
+            releaseDate DESC,
+            name COLLATE NOCASE ASC
+        """
+    )
+    fun observeReleasesByArtist(artistId: String): Flow<List<ReleaseEntity>>
+
+    /**
+     * Map `releaseId → trackCount`. Используется на главной и экране
+     * артиста, чтобы карточка релиза показывала количество треков.
+     * `@MapColumn` собирает результат в `Map<String, Int>` без N+1.
+     */
+    @Query("SELECT releaseId, COUNT(*) AS c FROM tracks GROUP BY releaseId")
+    fun observeTrackCountsByRelease(): Flow<Map<
+        @MapColumn(columnName = "releaseId") String,
+        @MapColumn(columnName = "c") Int,
+    >>
 
     @Query(
         """

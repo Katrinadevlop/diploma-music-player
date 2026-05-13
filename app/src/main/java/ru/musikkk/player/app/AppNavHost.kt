@@ -17,6 +17,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import ru.musikkk.player.feature.artist.ArtistScreen
+import ru.musikkk.player.feature.artist.ArtistViewModel
 import ru.musikkk.player.feature.auth.LoginScreen
 import ru.musikkk.player.feature.auth.RegisterScreen
 import ru.musikkk.player.feature.auth.VerifyEmailScreen
@@ -52,10 +54,12 @@ object Routes {
 
     private const val RELEASE = "release"
     private const val PLAYLIST = "playlist"
+    private const val ARTIST = "artist"
 
     /** Шаблон маршрута для NavHost: `release/{releaseId}`. */
     const val ReleasePattern = "$RELEASE/{${ReleaseDetailViewModel.ARG_RELEASE_ID}}"
     const val PlaylistDetailPattern = "$PLAYLIST/{${PlaylistDetailViewModel.ARG_PLAYLIST_ID}}"
+    const val ArtistPattern = "$ARTIST/{${ArtistViewModel.ARG_ARTIST_ID}}"
 
     /**
      * id релиза собирается из `artist|section|name` и может содержать
@@ -64,6 +68,7 @@ object Routes {
      */
     fun release(releaseId: String): String = "$RELEASE/${Uri.encode(releaseId)}"
     fun playlist(playlistId: String): String = "$PLAYLIST/${Uri.encode(playlistId)}"
+    fun artist(artistId: String): String = "$ARTIST/${Uri.encode(artistId)}"
 }
 
 /**
@@ -265,6 +270,27 @@ fun AppNavHost(
             ) {
                 ReleaseDetailScreen(
                     onBack = { navController.popBackStack() },
+                    onArtistClick = { artistId ->
+                        navController.navigate(Routes.artist(artistId)) {
+                            launchSingleTop = true
+                        }
+                    },
+                )
+            }
+
+            composable(
+                route = Routes.ArtistPattern,
+                arguments = listOf(
+                    navArgument(ArtistViewModel.ARG_ARTIST_ID) {
+                        type = NavType.StringType
+                    },
+                ),
+            ) {
+                ArtistScreen(
+                    onBack = { navController.popBackStack() },
+                    onReleaseClick = { release ->
+                        navController.navigate(Routes.release(release.id))
+                    },
                 )
             }
 
