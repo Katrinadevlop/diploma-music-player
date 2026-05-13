@@ -24,7 +24,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.MusikkkPlayer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,10 +31,21 @@
             </intent-filter>
         </activity>
 
+        <!--
+            android:exported="true" без android:permission — обязательное
+            требование контракта media3 MediaSessionService: иначе
+            сторонние MediaController-клиенты (Android Auto, Bluetooth-
+            гарнитуры, Google Assistant, system media-controls в шторке)
+            не смогут подключиться. Подходящего permission-level для
+            media-сервисов в платформе нет. Lint-warning ExportedService
+            подавлен осознанно, потому что фикс через permission/exported=false
+            сломает основную функциональность фонового плеера.
+        -->
         <service
             android:name=".core.media.MusikkkPlaybackService"
             android:exported="true"
-            android:foregroundServiceType="mediaPlayback">
+            android:foregroundServiceType="mediaPlayback"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="androidx.media3.session.MediaSessionService" />
             </intent-filter>

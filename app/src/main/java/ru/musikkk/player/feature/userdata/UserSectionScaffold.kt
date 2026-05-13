@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.musikkk.player.R
 import ru.musikkk.player.domain.library.Track
+import ru.musikkk.player.ui.util.tracksCountString
 import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
 import ru.musikkk.player.ui.components.SectionCover
 import ru.musikkk.player.ui.components.TrackListRow
@@ -151,7 +152,7 @@ private fun SectionHeader(
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = pluralizeTracksCount(trackCount),
+                text = tracksCountString(trackCount),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -159,16 +160,3 @@ private fun SectionHeader(
     }
 }
 
-@Composable
-private fun pluralizeTracksCount(count: Int): String {
-    val resId = when {
-        count == 0 -> R.string.library_track_count_zero
-        count == 1 -> R.string.library_track_count_one
-        else -> R.string.library_track_count_other
-    }
-    return if (resId == R.string.library_track_count_zero) {
-        stringResource(id = resId)
-    } else {
-        stringResource(id = resId, count)
-    }
-}

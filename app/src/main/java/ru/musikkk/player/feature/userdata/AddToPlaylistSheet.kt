@@ -47,6 +47,7 @@ import ru.musikkk.player.data.user.PlaylistsRepository
 import ru.musikkk.player.domain.user.Playlist
 import ru.musikkk.player.ui.components.MusikkkTextField
 import ru.musikkk.player.ui.theme.MusikkkSpacing
+import ru.musikkk.player.ui.util.tracksCountString
 
 @HiltViewModel
 class AddToPlaylistViewModel @Inject constructor(
@@ -175,7 +176,7 @@ private fun PlaylistPickerRow(playlist: Playlist, onClick: () -> Unit) {
         Column(modifier = Modifier.weight(1f)) {
             Text(playlist.name, style = MaterialTheme.typography.bodyLarge)
             Text(
-                text = stringResource(id = R.string.library_track_count_other, playlist.trackPaths.size),
+                text = tracksCountString(playlist.trackPaths.size),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

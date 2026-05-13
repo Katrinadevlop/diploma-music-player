@@ -1,7 +1,7 @@
 package ru.musikkk.player.data.upload
 
 import android.content.Context
-import android.net.Uri
+import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -64,7 +64,7 @@ class TrackUploadWorker @AssistedInject constructor(
             nowMs = now(),
         )
 
-        val uri = Uri.parse(entity.localUri)
+        val uri = entity.localUri.toUri()
         val displayName = entity.displayName.ifBlank { "upload-$uploadId" }
         val sizeBytes = entity.sizeBytes.coerceAtLeast(0L)
 

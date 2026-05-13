@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.musikkk.player.R
@@ -131,7 +132,7 @@ fun SettingsScreen(
                     onClick = {
                         val intent = android.content.Intent(
                             android.content.Intent.ACTION_VIEW,
-                            android.net.Uri.parse("https://musikkk.ru/billing"),
+                            "https://musikkk.ru/billing".toUri(),
                         )
                         runCatching { context.startActivity(intent) }
                     },

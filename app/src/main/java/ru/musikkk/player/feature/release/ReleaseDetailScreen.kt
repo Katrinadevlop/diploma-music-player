@@ -57,6 +57,7 @@ import ru.musikkk.player.ui.format.formatDuration
 import ru.musikkk.player.ui.format.formatReleaseYear
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
+import ru.musikkk.player.ui.util.tracksCountString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -201,7 +202,7 @@ private fun Header(release: Release, trackCount: Int) {
         )
 
         val year = formatReleaseYear(release.releaseDate, release.year)
-        val countText = pluralizeTracks(trackCount)
+        val countText = tracksCountString(trackCount)
         val sub = listOfNotNull(year, countText).joinToString(" · ")
         if (sub.isNotEmpty()) {
             Spacer(Modifier.height(MusikkkSpacing.s1))
@@ -329,16 +330,3 @@ private fun DownloadIconButton(
     }
 }
 
-@Composable
-private fun pluralizeTracks(count: Int): String {
-    val resId = when {
-        count == 0 -> R.string.library_track_count_zero
-        count == 1 -> R.string.library_track_count_one
-        else -> R.string.library_track_count_other
-    }
-    return if (resId == R.string.library_track_count_zero) {
-        stringResource(id = resId)
-    } else {
-        stringResource(id = resId, count)
-    }
-}

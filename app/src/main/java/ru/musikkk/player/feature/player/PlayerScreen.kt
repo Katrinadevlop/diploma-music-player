@@ -18,7 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.QueueMusic
+import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.RepeatOne
 import androidx.compose.material.icons.filled.Shuffle
@@ -168,7 +168,7 @@ private fun TopBar(onClose: () -> Unit, onOpenQueue: () -> Unit) {
         Spacer(Modifier.weight(1f))
         IconButton(onClick = onOpenQueue) {
             Icon(
-                imageVector = Icons.Filled.QueueMusic,
+                imageVector = Icons.AutoMirrored.Filled.QueueMusic,
                 contentDescription = stringResource(id = R.string.player_queue),
             )
         }

@@ -18,8 +18,8 @@ import ru.musikkk.player.feature.player.PlaybackViewModel
  */
 @Composable
 fun PlaybackAwareBackdrop(
-    fallbackCoverId: String? = null,
     modifier: Modifier = Modifier,
+    fallbackCoverId: String? = null,
     playbackViewModel: PlaybackViewModel = hiltViewModel(),
 ) {
     val state by playbackViewModel.state.collectAsStateWithLifecycle()

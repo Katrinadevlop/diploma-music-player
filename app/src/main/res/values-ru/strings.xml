@@ -8,9 +8,7 @@
     <string name="auth_field_username">Имя пользователя</string>
     <string name="auth_field_username_hint">3–32 латинских символа, цифры, _ или -</string>
     <string name="auth_field_password">Пароль</string>
-    <string name="auth_field_email">Почта</string>
     <string name="auth_action_login">Войти</string>
-    <string name="auth_action_register">Зарегистрироваться</string>
     <string name="auth_action_logout">Выйти</string>
     <string name="auth_password_show">Показать пароль</string>
     <string name="auth_password_hide">Скрыть пароль</string>
@@ -52,8 +50,6 @@
     <string name="register_error_terms_required">Примите условия, чтобы продолжить</string>
 
     <!-- Главный экран -->
-    <string name="home_greeting">Привет, %1$s</string>
-    <string name="home_placeholder_body">Библиотека, плеер и загрузки появятся в следующих итерациях.</string>
 
     <!-- Библиотека -->
     <string name="library_title">Библиотека</string>
@@ -64,9 +60,13 @@
     <string name="library_section_eps">EP</string>
     <string name="library_section_singles">Синглы</string>
     <string name="library_section_collabs">Коллабы</string>
-    <string name="library_track_count_zero">нет треков</string>
-    <string name="library_track_count_one">%1$d трек</string>
-    <string name="library_track_count_other">%1$d треков</string>
+    <string name="library_track_count_empty">нет треков</string>
+    <plurals name="library_track_count">
+        <item quantity="one">%1$d трек</item>
+        <item quantity="few">%1$d трека</item>
+        <item quantity="many">%1$d треков</item>
+        <item quantity="other">%1$d трека</item>
+    </plurals>
 
     <!-- Экран релиза -->
     <string name="release_back">Назад</string>
@@ -162,7 +162,6 @@
 
     <!-- Скачивание -->
     <string name="download_action_start">Скачать на телефон</string>
-    <string name="download_action_cancel">Отменить скачивание</string>
     <string name="download_action_delete">Удалить скачанный файл</string>
     <string name="download_action_retry">Повторить скачивание</string>
 
@@ -178,15 +177,8 @@
     <string name="player_repeat">Повтор</string>
 
     <!-- Общее -->
-    <string name="common_loading">Загрузка…</string>
     <string name="common_retry">Повторить</string>
     <string name="common_cancel">Отмена</string>
-    <string name="common_offline">Нет соединения</string>
-    <string name="common_empty">Пока ничего нет</string>
 
     <!-- Навигация -->
-    <string name="nav_home">Главная</string>
-    <string name="nav_library">Библиотека</string>
-    <string name="nav_search">Поиск</string>
-    <string name="nav_settings">Настройки</string>
 </resources>

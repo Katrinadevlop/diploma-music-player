@@ -8,9 +8,7 @@
     <string name="auth_field_username">Username</string>
     <string name="auth_field_username_hint">3–32 latin chars, digits, _ or -</string>
     <string name="auth_field_password">Password</string>
-    <string name="auth_field_email">Email</string>
     <string name="auth_action_login">Log in</string>
-    <string name="auth_action_register">Register</string>
     <string name="auth_action_logout">Log out</string>
     <string name="auth_password_show">Show password</string>
     <string name="auth_password_hide">Hide password</string>
@@ -52,8 +50,6 @@
     <string name="register_error_terms_required">Accept the terms to continue</string>
 
     <!-- Главный экран -->
-    <string name="home_greeting">Hi, %1$s</string>
-    <string name="home_placeholder_body">Library, player and uploads land in the next iterations.</string>
 
     <!-- Библиотека -->
     <string name="library_title">Library</string>
@@ -64,9 +60,17 @@
     <string name="library_section_eps">EPs</string>
     <string name="library_section_singles">Singles</string>
     <string name="library_section_collabs">Collabs</string>
-    <string name="library_track_count_zero">no tracks</string>
-    <string name="library_track_count_one">%1$d track</string>
-    <string name="library_track_count_other">%1$d tracks</string>
+    <!--
+        Спецслучай нуля вынесен отдельной строкой: Android Resources не
+        выбирает quantity="zero" автоматически — он опирается на CLDR,
+        а CLDR-правила английского/русского определены только для
+        one/few/many/other.
+    -->
+    <string name="library_track_count_empty">no tracks</string>
+    <plurals name="library_track_count">
+        <item quantity="one">%1$d track</item>
+        <item quantity="other">%1$d tracks</item>
+    </plurals>
 
     <!-- Экран релиза -->
     <string name="release_back">Back</string>
@@ -162,7 +166,6 @@
 
     <!-- Скачивание -->
     <string name="download_action_start">Download to phone</string>
-    <string name="download_action_cancel">Cancel download</string>
     <string name="download_action_delete">Delete download</string>
     <string name="download_action_retry">Retry download</string>
 
@@ -178,15 +181,8 @@
     <string name="player_repeat">Repeat</string>
 
     <!-- Общее -->
-    <string name="common_loading">Loading…</string>
     <string name="common_retry">Retry</string>
     <string name="common_cancel">Cancel</string>
-    <string name="common_offline">You are offline</string>
-    <string name="common_empty">Nothing here yet</string>
 
     <!-- Навигация -->
-    <string name="nav_home">Home</string>
-    <string name="nav_library">Library</string>
-    <string name="nav_search">Search</string>
-    <string name="nav_settings">Settings</string>
 </resources>

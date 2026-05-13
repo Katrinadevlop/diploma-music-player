@@ -57,6 +57,7 @@ import ru.musikkk.player.ui.components.MusikkkTextField
 import ru.musikkk.player.ui.components.PlaybackAwareBackdrop
 import ru.musikkk.player.ui.components.SectionCover
 import ru.musikkk.player.ui.theme.MusikkkSpacing
+import ru.musikkk.player.ui.util.tracksCountString
 
 data class PlaylistsUiState(
     val playlists: List<Playlist> = emptyList(),
@@ -221,7 +222,7 @@ private fun PlaylistRow(
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                text = pluralizeTracksCount(playlist.trackPaths.size),
+                text = tracksCountString(playlist.trackPaths.size),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -269,16 +270,3 @@ private fun CreatePlaylistDialog(
     )
 }
 
-@Composable
-private fun pluralizeTracksCount(count: Int): String {
-    val resId = when {
-        count == 0 -> R.string.library_track_count_zero
-        count == 1 -> R.string.library_track_count_one
-        else -> R.string.library_track_count_other
-    }
-    return if (resId == R.string.library_track_count_zero) {
-        stringResource(id = resId)
-    } else {
-        stringResource(id = resId, count)
-    }
-}
