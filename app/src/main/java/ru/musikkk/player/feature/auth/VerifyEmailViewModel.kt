@@ -1,6 +1,7 @@
 package ru.musikkk.player.feature.auth
 
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,6 +53,15 @@ class VerifyEmailViewModel @Inject constructor(
 
     private val transient = MutableStateFlow(TransientState())
 
+    /**
+     * Интервал тикера countdown'а. Видимо для тестов: `runTest`
+     * с `advanceUntilIdle()` зацикливается на бесконечном [delay],
+     * поэтому в тестах ставим [Long.MAX_VALUE], чтобы тикер сделал
+     * один emit и «уснул навсегда» в виртуальном времени.
+     */
+    @VisibleForTesting
+    internal var tickerIntervalMillis: Long = 1_000L
+
     val state: StateFlow<VerifyEmailUiState> = combine(
         authRepository.pendingVerificationFlow,
         transient,
@@ -92,7 +102,7 @@ class VerifyEmailViewModel @Inject constructor(
         var tick = 0L
         while (true) {
             emit(tick++)
-            delay(1_000)
+            delay(tickerIntervalMillis)
         }
     }
 

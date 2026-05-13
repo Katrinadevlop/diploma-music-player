@@ -10,15 +10,15 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -54,18 +54,28 @@ class VerifyEmailViewModelTest {
         Dispatchers.resetMain()
     }
 
+    /**
+     * VM с отключённым countdown-тикером — иначе `advanceUntilIdle()`
+     * зацикливается на бесконечной цепочке `delay(1s)`. Плюс держим
+     * `state` горячим через `backgroundScope`, чтобы `WhileSubscribed`
+     * не возвращал только initialValue при прямом чтении `state.value`.
+     */
+    private fun TestScope.createViewModel(): VerifyEmailViewModel {
+        val vm = VerifyEmailViewModel(authRepository, creds).also {
+            it.tickerIntervalMillis = Long.MAX_VALUE
+        }
+        backgroundScope.launch { vm.state.collect {} }
+        return vm
+    }
+
     @Test
     fun `пустой pending показывает loadingInitial false с пустым email`() = runTest {
-        val viewModel = VerifyEmailViewModel(authRepository, creds)
-        viewModel.state.test {
-            // первое значение — initialValue из stateIn
-            skipItems(1)
-            advanceUntilIdle()
-            val s = expectMostRecentItem()
-            assertEquals("", s.email)
-            assertEquals(false, s.isLoadingInitial)
-            cancelAndIgnoreRemainingEvents()
-        }
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val s = viewModel.state.value
+        assertEquals("", s.email)
+        assertEquals(false, s.isLoadingInitial)
     }
 
     @Test
@@ -82,7 +92,7 @@ class VerifyEmailViewModelTest {
             token = "t", expiresAtMs = 1L, user = AuthUser("p", "alice"),
         )
 
-        val viewModel = VerifyEmailViewModel(authRepository, creds)
+        val viewModel = createViewModel()
 
         viewModel.events.test {
             advanceUntilIdle()
@@ -104,7 +114,7 @@ class VerifyEmailViewModelTest {
         every { creds.read() } returns PendingVerificationCreds.Credentials("alice", "p")
         coEvery { authRepository.login(any(), any()) } throws AuthError.EmailNotVerified
 
-        val viewModel = VerifyEmailViewModel(authRepository, creds)
+        val viewModel = createViewModel()
         advanceUntilIdle()
         viewModel.onConfirmedClick()
         advanceUntilIdle()
@@ -125,7 +135,7 @@ class VerifyEmailViewModelTest {
         )
         every { creds.read() } returns null
 
-        val viewModel = VerifyEmailViewModel(authRepository, creds)
+        val viewModel = createViewModel()
         viewModel.events.test {
             advanceUntilIdle()
             viewModel.onConfirmedClick()
@@ -147,7 +157,7 @@ class VerifyEmailViewModelTest {
         )
         every { creds.read() } returns null
 
-        val viewModel = VerifyEmailViewModel(authRepository, creds)
+        val viewModel = createViewModel()
         advanceUntilIdle()
         assertTrue(viewModel.state.value.resendCooldownSeconds > 0)
 
@@ -169,7 +179,7 @@ class VerifyEmailViewModelTest {
         every { creds.read() } returns null
         coEvery { authRepository.resendVerificationEmail("a@b.com") } returns 60
 
-        val viewModel = VerifyEmailViewModel(authRepository, creds)
+        val viewModel = createViewModel()
         advanceUntilIdle()
         viewModel.onResendClick()
         advanceUntilIdle()
@@ -184,7 +194,7 @@ class VerifyEmailViewModelTest {
         pendingFlow.value = PendingVerification("a@b.com", "alice", now, now - 1_000)
         coEvery { authRepository.clearPendingVerification() } just Runs
 
-        val viewModel = VerifyEmailViewModel(authRepository, creds)
+        val viewModel = createViewModel()
         viewModel.events.test {
             advanceUntilIdle()
             viewModel.onUseDifferentEmailClick()
