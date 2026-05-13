@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,89 +34,131 @@ import androidx.compose.ui.unit.dp
 import ru.musikkk.player.R
 import ru.musikkk.player.domain.playback.PlaybackState
 import ru.musikkk.player.ui.components.CoverImage
+import ru.musikkk.player.ui.format.formatDuration
 import ru.musikkk.player.ui.theme.MusikkkColors
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
-private val MiniPlayerHeight = 72.dp
-
+/**
+ * Mini-player — горизонтальная полоска в стиле веб-клиента
+ * (`.player` / `.player-inner` в `static/styles.css`):
+ *   * cover слева,
+ *   * центральный блок: название трека + артист,
+ *   * controls: prev / play-pause / next,
+ *   * нижняя строка: текущее время · полоса прогресса · полное время.
+ *
+ * Тап по основной зоне открывает fullscreen-плеер. Volume и shuffle/repeat
+ * сознательно живут только в fullscreen — на мобиле для громкости есть
+ * физические кнопки устройства, а лишние контролы в mini-баре сжимают
+ * полезную область до нечитаемой.
+ */
 @Composable
 fun MiniPlayer(
     state: PlaybackState,
     onTogglePlay: () -> Unit,
     onSkipNext: () -> Unit,
+    onSkipPrevious: () -> Unit,
     onExpand: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val track = state.currentTrack ?: return
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(MiniPlayerHeight)
-                .background(MusikkkColors.SurfaceElevated)
-                .clickable(onClick = onExpand),
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MusikkkColors.SurfaceElevated)
+            .clickable(onClick = onExpand)
+            .padding(horizontal = MusikkkSpacing.s3, vertical = MusikkkSpacing.s2),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
+            CoverImage(
+                coverId = track.coverId,
+                contentDescription = track.title,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = MusikkkSpacing.s3, vertical = MusikkkSpacing.s2),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                CoverImage(
-                    coverId = track.coverId,
-                    contentDescription = track.title,
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(RoundedCornerShape(MusikkkRadius.sm)),
-                    fallbackText = track.title,
-                    radius = MusikkkRadius.sm,
+                    .size(52.dp)
+                    .clip(RoundedCornerShape(MusikkkRadius.sm)),
+                fallbackText = track.title,
+                radius = MusikkkRadius.sm,
+            )
+            Spacer(Modifier.width(MusikkkSpacing.s3))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = track.title,
+                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(Modifier.size(MusikkkSpacing.s3))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = track.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        text = track.artistName,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-
-                PlayPauseButton(
-                    isPlaying = state.isPlaying,
-                    isBuffering = state.isBuffering,
-                    onClick = onTogglePlay,
+                Text(
+                    text = track.artistName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
+            }
 
-                IconButton(onClick = onSkipNext) {
-                    Icon(
-                        imageVector = Icons.Filled.SkipNext,
-                        contentDescription = stringResource(id = R.string.player_skip_next),
-                    )
-                }
+            IconButton(onClick = onSkipPrevious) {
+                Icon(
+                    imageVector = Icons.Filled.SkipPrevious,
+                    contentDescription = stringResource(id = R.string.player_skip_previous),
+                )
+            }
+            PlayPauseButton(
+                isPlaying = state.isPlaying,
+                isBuffering = state.isBuffering,
+                onClick = onTogglePlay,
+            )
+            IconButton(onClick = onSkipNext) {
+                Icon(
+                    imageVector = Icons.Filled.SkipNext,
+                    contentDescription = stringResource(id = R.string.player_skip_next),
+                )
             }
         }
 
-        // Тонкая полоска прогресса по нижней кромке мини-плеера.
-        val progress = if (state.durationMs > 0) {
-            (state.positionMs.toFloat() / state.durationMs.toFloat()).coerceIn(0f, 1f)
-        } else 0f
+        ProgressRow(
+            positionMs = state.positionMs,
+            durationMs = state.durationMs,
+        )
+    }
+}
+
+@Composable
+private fun ProgressRow(positionMs: Long, durationMs: Long) {
+    val progress = if (durationMs > 0) {
+        (positionMs.toFloat() / durationMs.toFloat()).coerceIn(0f, 1f)
+    } else 0f
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = MusikkkSpacing.s1),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = formatDuration((positionMs / 1000).toInt()),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.width(40.dp),
+        )
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp),
+                .weight(1f)
+                .height(3.dp)
+                .padding(horizontal = MusikkkSpacing.s2),
             color = MaterialTheme.colorScheme.primary,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+        Text(
+            text = formatDuration((durationMs / 1000).toInt()),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.width(40.dp),
         )
     }
 }
@@ -125,18 +169,24 @@ private fun PlayPauseButton(
     isBuffering: Boolean,
     onClick: () -> Unit,
 ) {
-    IconButton(onClick = onClick) {
-        when {
-            isBuffering -> CircularProgressIndicator(
+    Box(
+        modifier = Modifier.size(40.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (isBuffering) {
+            CircularProgressIndicator(
                 modifier = Modifier.size(20.dp),
                 strokeWidth = 2.dp,
             )
-            else -> Icon(
-                imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                contentDescription = stringResource(
-                    id = if (isPlaying) R.string.player_pause else R.string.player_play,
-                ),
-            )
+        } else {
+            IconButton(onClick = onClick, modifier = Modifier.fillMaxSize()) {
+                Icon(
+                    imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                    contentDescription = stringResource(
+                        id = if (isPlaying) R.string.player_pause else R.string.player_play,
+                    ),
+                )
+            }
         }
     }
 }

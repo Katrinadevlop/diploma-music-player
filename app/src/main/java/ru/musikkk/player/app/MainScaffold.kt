@@ -50,6 +50,7 @@ private fun AppShell() {
                 state = playbackState,
                 onTogglePlay = playbackViewModel::togglePlayPause,
                 onSkipNext = playbackViewModel::skipNext,
+                onSkipPrevious = playbackViewModel::skipPrevious,
                 onExpand = {
                     controller.navigate(Routes.Player) {
                         launchSingleTop = true
