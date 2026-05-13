@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!--
+        media3 (ExoPlayer, MediaSession, DataSource) широко использует
+        классы, помеченные @androidx.media3.common.util.UnstableApi —
+        OkHttpDataSource.Factory, DefaultMediaSourceFactory, ExoPlayer
+        и др. Альтернатив в stable-наборе нет, а propagation @UnstableApi
+        через каждый файл (фабрика → сервис → контроллер → DI-модуль)
+        захламляет код. Это рекомендуемая стратегия в media3 docs для
+        приложений, целиком завязанных на media3-стек.
+    -->
+    <issue id="UnsafeOptInUsageError" severity="ignore" />
+</lint>

@@ -1,16 +1,8 @@
-// OkHttpDataSource.Factory и DefaultMediaSourceFactory из media3 помечены
-// @UnstableApi — media3 не гарантирует backward-совместимость по minor-
-// версиям. Мы сознательно опираемся на эти API: альтернативы в stable-
-// наборе нет, обёртка изолирована в одном файле. @OptIn на функции
-// Android Lint не убеждает — нужен файловый scope.
-@file:OptIn(UnstableApi::class)
-
 package ru.musikkk.player.core.media
 
 import android.content.Context
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory

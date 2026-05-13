@@ -55,6 +55,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    lint {
+        // Конфигурация лежит в app/lint.xml — там разъясняется,
+        // почему UnsafeOptInUsageError отключён для media3-стека.
+        lintConfig = file("lint.xml")
+    }
 }
 
 dependencies {
