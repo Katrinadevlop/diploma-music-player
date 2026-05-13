@@ -151,6 +151,16 @@
     <string name="hub_recent">Recent</string>
     <string name="hub_top">Top</string>
 
+    <!-- Сброс пароля -->
+    <string name="auth_login_forgot_password">Forgot password?</string>
+    <string name="auth_reset_title">Reset password</string>
+    <string name="auth_reset_subtitle">Enter your email — we\'ll send a reset link</string>
+    <string name="auth_reset_email_label">Email</string>
+    <string name="auth_reset_send">Send link</string>
+    <string name="auth_reset_back_to_login">Back to login</string>
+    <string name="auth_reset_browser_hint">The confirmation form will open in your browser. If the email doesn\'t arrive, check the Spam folder.</string>
+    <string name="auth_reset_email_invalid">Enter a valid email</string>
+
     <!-- Likes -->
     <string name="like_action_like">Like</string>
     <string name="like_action_unlike">Unlike</string>

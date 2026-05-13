@@ -47,6 +47,7 @@ import ru.musikkk.player.ui.theme.MusikkkSpacing
 fun LoginScreen(
     onAuthenticated: () -> Unit,
     onRegisterClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -167,6 +168,14 @@ fun LoginScreen(
                         TextButton(onClick = onRegisterClick, enabled = !state.isSubmitting) {
                             Text(stringResource(id = R.string.auth_login_register_link))
                         }
+                    }
+
+                    TextButton(
+                        onClick = onForgotPasswordClick,
+                        enabled = !state.isSubmitting,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    ) {
+                        Text(stringResource(id = R.string.auth_login_forgot_password))
                     }
                 }
             }

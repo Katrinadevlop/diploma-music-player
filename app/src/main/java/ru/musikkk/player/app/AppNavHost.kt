@@ -21,6 +21,7 @@ import ru.musikkk.player.feature.artist.ArtistScreen
 import ru.musikkk.player.feature.artist.ArtistViewModel
 import ru.musikkk.player.feature.auth.LoginScreen
 import ru.musikkk.player.feature.auth.RegisterScreen
+import ru.musikkk.player.feature.auth.ResetPasswordScreen
 import ru.musikkk.player.feature.auth.VerifyEmailScreen
 import ru.musikkk.player.feature.home.HomeScreen
 import ru.musikkk.player.feature.player.PlayerScreen
@@ -40,6 +41,7 @@ object Routes {
     const val Login = "login"
     const val Register = "register"
     const val VerifyEmail = "verify_email"
+    const val ResetPassword = "reset_password"
     /**
      * Главный экран после авторизации — «Для тебя / Плейлисты /
      * Артисты», аналог `view-artists` в веб-клиенте. Имя
@@ -115,6 +117,17 @@ fun AppNavHost(
                             launchSingleTop = true
                         }
                     },
+                    onForgotPasswordClick = {
+                        navController.navigate(Routes.ResetPassword) {
+                            launchSingleTop = true
+                        }
+                    },
+                )
+            }
+
+            composable(Routes.ResetPassword) {
+                ResetPasswordScreen(
+                    onBackToLogin = { navController.popBackStack() },
                 )
             }
 

@@ -148,6 +148,16 @@
     <string name="hub_recent">Недавнее</string>
     <string name="hub_top">Топ</string>
 
+    <!-- Сброс пароля -->
+    <string name="auth_login_forgot_password">Забыли пароль?</string>
+    <string name="auth_reset_title">Сброс пароля</string>
+    <string name="auth_reset_subtitle">Введите e-mail — мы отправим ссылку для сброса</string>
+    <string name="auth_reset_email_label">E-mail</string>
+    <string name="auth_reset_send">Отправить ссылку</string>
+    <string name="auth_reset_back_to_login">Вернуться ко входу</string>
+    <string name="auth_reset_browser_hint">Форма подтверждения откроется в браузере. Если письма нет — проверьте папку «Спам».</string>
+    <string name="auth_reset_email_invalid">Введите корректный e-mail</string>
+
     <!-- Лайки -->
     <string name="like_action_like">Поставить лайк</string>
     <string name="like_action_unlike">Убрать лайк</string>
