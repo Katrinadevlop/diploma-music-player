@@ -22,11 +22,10 @@ import ru.musikkk.player.feature.artist.ArtistViewModel
 import ru.musikkk.player.feature.auth.LoginScreen
 import ru.musikkk.player.feature.auth.RegisterScreen
 import ru.musikkk.player.feature.auth.VerifyEmailScreen
-import ru.musikkk.player.feature.library.LibraryScreen
+import ru.musikkk.player.feature.home.HomeScreen
 import ru.musikkk.player.feature.player.PlayerScreen
 import ru.musikkk.player.feature.release.ReleaseDetailScreen
 import ru.musikkk.player.feature.release.ReleaseDetailViewModel
-import ru.musikkk.player.feature.hub.HubScreen
 import ru.musikkk.player.feature.search.SearchScreen
 import ru.musikkk.player.feature.settings.SettingsScreen
 import ru.musikkk.player.feature.uploads.UploadsScreen
@@ -41,12 +40,17 @@ object Routes {
     const val Login = "login"
     const val Register = "register"
     const val VerifyEmail = "verify_email"
+    /**
+     * Главный экран после авторизации — «Для тебя / Плейлисты /
+     * Артисты», аналог `view-artists` в веб-клиенте. Имя
+     * `library` сохранено ради backward-совместимости с
+     * существующими навигационными вызовами / тестами.
+     */
     const val Library = "library"
     const val Player = "player"
     const val Settings = "settings"
     const val Search = "search"
     const val Uploads = "uploads"
-    const val Hub = "hub"
     const val Liked = "liked"
     const val Playlists = "playlists"
     const val Recent = "recent"
@@ -163,46 +167,37 @@ fun AppNavHost(
             }
 
             composable(Routes.Library) {
-                LibraryScreen(
+                HomeScreen(
                     onSignedOut = {
                         navController.navigate(Routes.Login) {
                             popUpTo(Routes.Library) { inclusive = true }
                             launchSingleTop = true
                         }
                     },
-                    onReleaseClick = { release ->
-                        navController.navigate(Routes.release(release.id))
-                    },
                     onOpenSettings = {
-                        navController.navigate(Routes.Settings) {
-                            launchSingleTop = true
-                        }
+                        navController.navigate(Routes.Settings) { launchSingleTop = true }
                     },
                     onOpenSearch = {
-                        navController.navigate(Routes.Search) {
-                            launchSingleTop = true
-                        }
+                        navController.navigate(Routes.Search) { launchSingleTop = true }
                     },
                     onOpenUploads = {
-                        navController.navigate(Routes.Uploads) {
-                            launchSingleTop = true
-                        }
+                        navController.navigate(Routes.Uploads) { launchSingleTop = true }
                     },
-                    onOpenHub = {
-                        navController.navigate(Routes.Hub) {
-                            launchSingleTop = true
-                        }
+                    onOpenLiked = {
+                        navController.navigate(Routes.Liked) { launchSingleTop = true }
                     },
-                )
-            }
-
-            composable(Routes.Hub) {
-                HubScreen(
-                    onBack = { navController.popBackStack() },
-                    onOpenLiked = { navController.navigate(Routes.Liked) { launchSingleTop = true } },
-                    onOpenPlaylists = { navController.navigate(Routes.Playlists) { launchSingleTop = true } },
-                    onOpenRecent = { navController.navigate(Routes.Recent) { launchSingleTop = true } },
-                    onOpenTop = { navController.navigate(Routes.Top) { launchSingleTop = true } },
+                    onOpenRecent = {
+                        navController.navigate(Routes.Recent) { launchSingleTop = true }
+                    },
+                    onOpenTop = {
+                        navController.navigate(Routes.Top) { launchSingleTop = true }
+                    },
+                    onOpenPlaylist = { playlist ->
+                        navController.navigate(Routes.playlist(playlist.id))
+                    },
+                    onOpenArtist = { artist ->
+                        navController.navigate(Routes.artist(artist.id))
+                    },
                 )
             }
 

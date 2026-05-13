@@ -53,8 +53,6 @@
 
     <!-- Библиотека -->
     <string name="library_title">Library</string>
-    <string name="library_empty_title">No releases yet</string>
-    <string name="library_empty_body">Upload tracks via the web client at musikkk.ru — they will appear here.</string>
     <string name="library_error_title">Couldn\'t load the library</string>
     <string name="library_section_albums">Albums</string>
     <string name="library_section_eps">EPs</string>
@@ -133,16 +131,25 @@
     <string name="settings_manage_subscription">Subscription &amp; plans</string>
     <string name="settings_open_in_browser">Opens in browser</string>
 
-    <!-- Хаб «Your music» -->
-    <string name="hub_title">Your music</string>
+    <!-- Главная: «Для тебя / Плейлисты / Артисты» — повторяет веб view-artists -->
+    <string name="home_section_smart">For you</string>
+    <string name="home_section_playlists">Playlists</string>
+    <string name="home_section_artists">Artists</string>
+    <string name="home_smart_continue">Continue</string>
+    <string name="home_smart_continue_empty">Stop a track — we\'ll resume from that spot</string>
+    <string name="home_smart_recent">Recently played</string>
+    <string name="home_smart_recent_empty">Play a few tracks — your history will appear here</string>
+    <string name="home_smart_top">Most played</string>
+    <string name="home_smart_top_empty">The ranking will appear after you listen</string>
+    <string name="home_likes_subtitle">Playlist</string>
+    <string name="home_create_playlist">Create playlist</string>
+    <string name="home_create_playlist_sub">Tap to add a new one</string>
+
+    <!-- Заголовки subscreens, на которые ведут карточки с главной -->
     <string name="hub_liked">Liked</string>
-    <string name="hub_liked_subtitle">Tracks you marked with a heart</string>
     <string name="hub_playlists">Playlists</string>
-    <string name="hub_playlists_subtitle">Your collections</string>
     <string name="hub_recent">Recent</string>
-    <string name="hub_recent_subtitle">Recently played tracks</string>
     <string name="hub_top">Top</string>
-    <string name="hub_top_subtitle">Most played by you</string>
 
     <!-- Likes -->
     <string name="like_action_like">Like</string>
@@ -166,7 +173,6 @@
     <!-- Recent / Top / Continue -->
     <string name="recent_empty">Nothing played recently.</string>
     <string name="top_empty">No top tracks yet. Listen to something.</string>
-    <string name="continue_title">CONTINUE LISTENING</string>
 
     <!-- Скачивание -->
     <string name="download_action_start">Download to phone</string>

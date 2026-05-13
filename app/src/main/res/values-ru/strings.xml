@@ -53,8 +53,6 @@
 
     <!-- Библиотека -->
     <string name="library_title">Библиотека</string>
-    <string name="library_empty_title">Пока ни одного релиза</string>
-    <string name="library_empty_body">Загрузите треки через веб-клиент на musikkk.ru — они появятся здесь.</string>
     <string name="library_error_title">Не удалось загрузить библиотеку</string>
     <string name="library_section_albums">Альбомы</string>
     <string name="library_section_eps">EP</string>
@@ -130,15 +128,25 @@
     <string name="settings_open_in_browser">Откроется в браузере</string>
 
     <!-- Хаб «Моя музыка» -->
-    <string name="hub_title">Моя музыка</string>
+    <!-- Главная: «Для тебя / Плейлисты / Артисты» — повторяет веб view-artists -->
+    <string name="home_section_smart">Для тебя</string>
+    <string name="home_section_playlists">Плейлисты</string>
+    <string name="home_section_artists">Артисты</string>
+    <string name="home_smart_continue">Продолжить</string>
+    <string name="home_smart_continue_empty">Останови трек — продолжим с этого места</string>
+    <string name="home_smart_recent">Недавно слушал</string>
+    <string name="home_smart_recent_empty">Послушай пару треков — здесь появится история</string>
+    <string name="home_smart_top">Чаще всего</string>
+    <string name="home_smart_top_empty">Рейтинг появится после прослушивания</string>
+    <string name="home_likes_subtitle">Плейлист</string>
+    <string name="home_create_playlist">Создать плейлист</string>
+    <string name="home_create_playlist_sub">Нажмите, чтобы добавить</string>
+
+    <!-- Заголовки subscreens, на которые ведут карточки с главной -->
     <string name="hub_liked">Лайки</string>
-    <string name="hub_liked_subtitle">Треки, помеченные сердечком</string>
     <string name="hub_playlists">Плейлисты</string>
-    <string name="hub_playlists_subtitle">Ваши подборки</string>
     <string name="hub_recent">Недавнее</string>
-    <string name="hub_recent_subtitle">Что вы слушали недавно</string>
     <string name="hub_top">Топ</string>
-    <string name="hub_top_subtitle">Что вы слушаете чаще всего</string>
 
     <!-- Лайки -->
     <string name="like_action_like">Поставить лайк</string>
@@ -162,7 +170,6 @@
     <!-- Recent / Top / Continue -->
     <string name="recent_empty">В последнее время ничего не играли.</string>
     <string name="top_empty">Топа пока нет. Послушайте что-нибудь.</string>
-    <string name="continue_title">ПРОДОЛЖИТЬ</string>
 
     <!-- Скачивание -->
     <string name="download_action_start">Скачать на телефон</string>
