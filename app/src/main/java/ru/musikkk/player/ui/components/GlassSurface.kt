@@ -5,12 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.musikkk.player.ui.theme.MusikkkColors
 import ru.musikkk.player.ui.theme.MusikkkRadius
 
 /**
@@ -31,8 +31,8 @@ fun GlassSurface(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(MusikkkColors.Surface, shape)
-            .border(BorderStroke(1.dp, MusikkkColors.BorderMuted), shape),
+            .background(MaterialTheme.colorScheme.surface, shape)
+            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant), shape),
     ) {
         content()
     }

@@ -14,7 +14,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import ru.musikkk.player.ui.theme.MusikkkColors
 import ru.musikkk.player.ui.theme.MusikkkRadius
 
 /**
@@ -31,10 +30,12 @@ fun SectionCover(
     radius: androidx.compose.ui.unit.Dp = MusikkkRadius.lg,
 ) {
     val shape = RoundedCornerShape(radius)
+    // Градиент: «приподнятая» поверхность → лёгкий мятный оттенок.
+    // Через theme-токены работает и в светлой теме (там оба светлые).
     val gradient = Brush.linearGradient(
         listOf(
-            MusikkkColors.SurfaceElevated,
-            MusikkkColors.AccentBgSelected,
+            MaterialTheme.colorScheme.surfaceContainerHighest,
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.06f),
         ),
     )
 
@@ -42,7 +43,7 @@ fun SectionCover(
         modifier = modifier
             .clip(shape)
             .background(gradient, shape)
-            .border(1.dp, MusikkkColors.BorderMuted, shape),
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, shape),
         contentAlignment = Alignment.Center,
     ) {
         Icon(

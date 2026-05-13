@@ -35,7 +35,6 @@ import ru.musikkk.player.R
 import ru.musikkk.player.domain.playback.PlaybackState
 import ru.musikkk.player.ui.components.CoverImage
 import ru.musikkk.player.ui.format.formatDuration
-import ru.musikkk.player.ui.theme.MusikkkColors
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
@@ -66,7 +65,7 @@ fun MiniPlayer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MusikkkColors.SurfaceElevated)
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .clickable(onClick = onExpand)
             .padding(horizontal = MusikkkSpacing.s3, vertical = MusikkkSpacing.s2),
     ) {

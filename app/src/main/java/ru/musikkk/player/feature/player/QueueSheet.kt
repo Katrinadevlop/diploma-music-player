@@ -33,7 +33,6 @@ import ru.musikkk.player.domain.playback.PlayableTrack
 import ru.musikkk.player.domain.playback.PlaybackState
 import ru.musikkk.player.ui.components.CoverImage
 import ru.musikkk.player.ui.format.formatDuration
-import ru.musikkk.player.ui.theme.MusikkkColors
 import ru.musikkk.player.ui.theme.MusikkkRadius
 import ru.musikkk.player.ui.theme.MusikkkSpacing
 
@@ -49,7 +48,7 @@ fun QueueSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = MusikkkColors.SurfaceElevated,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
@@ -82,7 +81,11 @@ private fun QueueRow(
     isCurrent: Boolean,
     onClick: () -> Unit,
 ) {
-    val rowBackground = if (isCurrent) MusikkkColors.AccentBgSelected else MusikkkColors.SurfaceElevated
+    val rowBackground = if (isCurrent) {
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.06f)
+    } else {
+        MaterialTheme.colorScheme.surfaceContainerHighest
+    }
 
     Row(
         modifier = Modifier

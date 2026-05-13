@@ -14,7 +14,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImage
 import ru.musikkk.player.core.network.MediaUrls
-import ru.musikkk.player.ui.theme.MusikkkColors
 import ru.musikkk.player.ui.theme.MusikkkRadius
 
 /**
@@ -38,7 +37,7 @@ fun CoverImage(
     Box(
         modifier = modifier
             .clip(shape)
-            .background(MusikkkColors.SurfaceHover, shape),
+            .background(MaterialTheme.colorScheme.surfaceVariant, shape),
         contentAlignment = Alignment.Center,
     ) {
         if (url != null) {
@@ -52,7 +51,7 @@ fun CoverImage(
             Text(
                 text = fallbackText.first().uppercaseChar().toString(),
                 style = MaterialTheme.typography.headlineMedium,
-                color = MusikkkColors.TextMuted,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }

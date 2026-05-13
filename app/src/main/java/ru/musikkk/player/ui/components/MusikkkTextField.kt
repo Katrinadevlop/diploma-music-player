@@ -3,13 +3,13 @@ package ru.musikkk.player.ui.components
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
-import ru.musikkk.player.ui.theme.MusikkkColors
 import ru.musikkk.player.ui.theme.MusikkkRadius
 
 /**
@@ -46,13 +46,13 @@ fun MusikkkTextField(
         trailingIcon = trailingIcon,
         shape = RoundedCornerShape(MusikkkRadius.md),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MusikkkColors.Surface,
-            unfocusedContainerColor = MusikkkColors.Surface.copy(alpha = 0.35f),
-            disabledContainerColor = MusikkkColors.Surface.copy(alpha = 0.2f),
-            focusedBorderColor = MusikkkColors.Accent,
-            unfocusedBorderColor = MusikkkColors.BorderStrong,
-            focusedLabelColor = MusikkkColors.Accent,
-            cursorColor = MusikkkColors.Accent,
+            focusedContainerColor = MaterialTheme.colorScheme.surface,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.35f),
+            disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.2f),
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            cursorColor = MaterialTheme.colorScheme.primary,
         ),
     )
 }

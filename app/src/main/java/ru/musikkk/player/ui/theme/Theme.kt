@@ -8,6 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import ru.musikkk.player.domain.settings.ThemeMode
 
+// Маппинг Musikkk-токенов на M3 ColorScheme. `surfaceContainerHighest`
+// держит «приподнятую» поверхность для mini-player / sheet'ов / queue —
+// раньше для этого использовался `MusikkkColors.SurfaceElevated` напрямую,
+// что ломало светлую тему. Теперь компоненты ходят через MaterialTheme.
+
 private val DarkScheme = darkColorScheme(
     primary = MusikkkColors.Accent,
     onPrimary = Color.Black,
@@ -21,6 +26,7 @@ private val DarkScheme = darkColorScheme(
     onSurface = MusikkkColors.TextPrimary,
     surfaceVariant = MusikkkColors.SurfaceHover,
     onSurfaceVariant = MusikkkColors.TextSecondary,
+    surfaceContainerHighest = MusikkkColors.SurfaceElevated,
     outline = MusikkkColors.BorderStrong,
     outlineVariant = MusikkkColors.BorderMuted,
     error = MusikkkColors.Danger,
@@ -40,6 +46,7 @@ private val LightScheme = lightColorScheme(
     onSurface = MusikkkLightColors.TextPrimary,
     surfaceVariant = MusikkkLightColors.SurfaceHover,
     onSurfaceVariant = MusikkkLightColors.TextSecondary,
+    surfaceContainerHighest = MusikkkLightColors.SurfaceElevated,
     outline = MusikkkLightColors.BorderStrong,
     outlineVariant = MusikkkLightColors.BorderMuted,
     error = MusikkkLightColors.Danger,
