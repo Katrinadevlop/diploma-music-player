@@ -6,15 +6,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.math.max
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -56,7 +55,8 @@ class VerifyEmailViewModel @Inject constructor(
     val state: StateFlow<VerifyEmailUiState> = combine(
         authRepository.pendingVerificationFlow,
         transient,
-    ) { pending, t ->
+        tickerFlow(),
+    ) { pending, t, _ ->
         if (pending == null) {
             VerifyEmailUiState(isLoadingInitial = false)
         } else {
@@ -82,20 +82,17 @@ class VerifyEmailViewModel @Inject constructor(
     private val _events = Channel<VerifyEmailEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
-    private var tickJob: Job? = null
-
-    init {
-        startCountdownTicker()
-    }
-
-    private fun startCountdownTicker() {
-        tickJob?.cancel()
-        tickJob = viewModelScope.launch {
-            while (true) {
-                delay(1_000)
-                // Заставляем StateFlow пересчитать оставшиеся секунды.
-                transient.update { it.copy(tick = it.tick + 1) }
-            }
+    /**
+     * Тикер раз в секунду, чтобы countdown пересчитывался. Вшит в [combine]
+     * как третий поток — благодаря [SharingStarted.WhileSubscribed] он
+     * автоматически останавливается, когда у `state` не остаётся
+     * подписчиков (uplift из background или unit-теста — JVM не висит).
+     */
+    private fun tickerFlow(): Flow<Long> = flow {
+        var tick = 0L
+        while (true) {
+            emit(tick++)
+            delay(1_000)
         }
     }
 
@@ -178,17 +175,10 @@ class VerifyEmailViewModel @Inject constructor(
         viewModelScope.launch { _events.send(VerifyEmailEvent.GoToLogin) }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        tickJob?.cancel()
-    }
-
     private data class TransientState(
         val isResending: Boolean = false,
         val isConfirming: Boolean = false,
         @StringRes val infoRes: Int? = null,
         @StringRes val errorRes: Int? = null,
-        // Принудительно дёргает combine раз в секунду, чтобы countdown тикал.
-        val tick: Long = 0,
     )
 }

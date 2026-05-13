@@ -10,31 +10,41 @@ jobs:
   build:
     name: Lint, test, assemble (debug)
     runs-on: ubuntu-latest
+    # Жёсткий потолок на весь job: даже если какой-то тест зависнет
+    # на блокирующей корутине / non-daemon потоке, GitHub убьёт job
+    # за 30 минут вместо стандартных 6 часов.
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        timeout-minutes: 3
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+        timeout-minutes: 3
 
       - name: Cache Gradle
         uses: gradle/actions/setup-gradle@v4
+        timeout-minutes: 5
 
       - name: Make gradlew executable
         run: chmod +x gradlew
 
       - name: Unit tests
         run: ./gradlew :app:testDebugUnitTest --stacktrace
+        timeout-minutes: 12
 
       - name: Lint
         run: ./gradlew :app:lintDebug --stacktrace
+        timeout-minutes: 8
 
       - name: Assemble debug
         run: ./gradlew :app:assembleDebug --stacktrace
+        timeout-minutes: 15
 
       - name: Upload debug APK
         if: success()

@@ -1,3 +1,5 @@
+import java.time.Duration
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -119,4 +121,11 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+}
+
+// Жёсткий таймаут на JVM-юнит-тесты: если корутина / non-daemon поток
+// не отпустит test worker, Gradle прервёт таск, и CI не будет висеть часами.
+// 5 минут с запасом — все наши ViewModel-тесты укладываются в секунды.
+tasks.withType<Test>().configureEach {
+    timeout.set(Duration.ofMinutes(5))
 }
