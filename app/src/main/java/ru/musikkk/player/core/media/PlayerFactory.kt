@@ -1,3 +1,10 @@
+// OkHttpDataSource.Factory и DefaultMediaSourceFactory из media3 помечены
+// @UnstableApi — media3 не гарантирует backward-совместимость по minor-
+// версиям. Мы сознательно опираемся на эти API: альтернативы в stable-
+// наборе нет, обёртка изолирована в одном файле. @OptIn на функции
+// Android Lint не убеждает — нужен файловый scope.
+@file:OptIn(UnstableApi::class)
+
 package ru.musikkk.player.core.media
 
 import android.content.Context
@@ -25,11 +32,6 @@ class PlayerFactory @Inject constructor(
     @ApplicationContext private val context: Context,
     @AuthClient private val okHttpClient: OkHttpClient,
 ) {
-    // OkHttpDataSource.Factory и DefaultMediaSourceFactory помечены
-    // @UnstableApi — media3 не гарантирует backward-совместимость по
-    // minor-версиям. Мы сознательно опираемся на эти API: альтернативы
-    // в stable-наборе нет, и DI-обёртка изолирована в одном месте.
-    @OptIn(UnstableApi::class)
     fun create(): ExoPlayer {
         val dataSourceFactory = OkHttpDataSource.Factory(okHttpClient)
             .setUserAgent("Musikkk-Android/${BuildConfig.VERSION_NAME}")
