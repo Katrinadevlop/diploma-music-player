@@ -3,6 +3,7 @@ package ru.musikkk.player.core.media
 import android.content.Context
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
@@ -24,6 +25,11 @@ class PlayerFactory @Inject constructor(
     @ApplicationContext private val context: Context,
     @AuthClient private val okHttpClient: OkHttpClient,
 ) {
+    // OkHttpDataSource.Factory и DefaultMediaSourceFactory помечены
+    // @UnstableApi — media3 не гарантирует backward-совместимость по
+    // minor-версиям. Мы сознательно опираемся на эти API: альтернативы
+    // в stable-наборе нет, и DI-обёртка изолирована в одном месте.
+    @OptIn(UnstableApi::class)
     fun create(): ExoPlayer {
         val dataSourceFactory = OkHttpDataSource.Factory(okHttpClient)
             .setUserAgent("Musikkk-Android/${BuildConfig.VERSION_NAME}")
